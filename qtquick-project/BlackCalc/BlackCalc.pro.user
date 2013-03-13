@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by Qt Creator 2.6.2, 2013-03-13T21:46:56. -->
+<!-- Written by Qt Creator 2.6.2, 2013-03-13T22:01:20. -->
 <qtcreator>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -185,10 +185,10 @@
     <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.QNX.BBDeployConfiguration</value>
     <valuemap type="QVariantMap" key="Qnx.BlackBerry.DeployInformation">
      <valuemap type="QVariantMap" key="Qnx.BlackBerry.DeployInformation.0">
-      <value type="QString" key="Qnx.BlackBerry.DeployInformation.AppDescriptor">/home/cruz/Kodzenie/BlackBerry/cruz91-BlackCalcProject/BlackCalc-qtquick/bar-descriptor.xml</value>
+      <value type="QString" key="Qnx.BlackBerry.DeployInformation.AppDescriptor">/home/cruz/Kodzenie/BlackBerry/cruz91-BlackCalcProject/qtquick-project/BlackCalc/bar-descriptor.xml</value>
       <value type="bool" key="Qnx.BlackBerry.DeployInformation.Enabled">true</value>
-      <value type="QString" key="Qnx.BlackBerry.DeployInformation.Package">/home/cruz/Kodzenie/BlackBerry/BlackCalc-build-BlackBerry_10_target_10_0_9_1673_Simulator-Debug/BlackCalc.bar</value>
-      <value type="QString" key="Qnx.BlackBerry.DeployInformation.ProFile">/home/cruz/Kodzenie/BlackBerry/cruz91-BlackCalcProject/BlackCalc-qtquick/BlackCalc.pro</value>
+      <value type="QString" key="Qnx.BlackBerry.DeployInformation.Package">/home/cruz/Kodzenie/BlackBerry/cruz91-BlackCalcProject/builds/release/BlackCalc.bar</value>
+      <value type="QString" key="Qnx.BlackBerry.DeployInformation.ProFile">/home/cruz/Kodzenie/BlackBerry/cruz91-BlackCalcProject/qtquick-project/BlackCalc/BlackCalc.pro</value>
      </valuemap>
      <value type="int" key="Qnx.BlackBerry.DeployInformationCount">1</value>
     </valuemap>
@@ -228,8 +228,8 @@
     </valuelist>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">BlackCalc na urządzeniu BlackBerry</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.QNX.BBRunConfiguration./home/cruz/Kodzenie/BlackBerry/cruz91-BlackCalcProject/BlackCalc-qtquick/BlackCalc.pro</value>
-    <value type="QString" key="Qt4ProjectManager.QnxRunConfiguration.ProFilePath">/home/cruz/Kodzenie/BlackBerry/cruz91-BlackCalcProject/BlackCalc-qtquick/BlackCalc.pro</value>
+    <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.QNX.BBRunConfiguration./home/cruz/Kodzenie/BlackBerry/cruz91-BlackCalcProject/qtquick-project/BlackCalc/BlackCalc.pro</value>
+    <value type="QString" key="Qt4ProjectManager.QnxRunConfiguration.ProFilePath">/home/cruz/Kodzenie/BlackBerry/cruz91-BlackCalcProject/qtquick-project/BlackCalc/BlackCalc.pro</value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">true</value>
     <value type="bool" key="RunConfiguration.UseMultiProcess">false</value>
