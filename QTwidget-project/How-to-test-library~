@@ -1,8 +1,0 @@
-1. Open project with library and build it (use configuration for BlackBerry)
-2. connect via ftp with virtual "maschine" (you can use filezilla)
-user:devuser
-pass:devuser
-3. copy built library eg. to /accounts/devuser (file: liblibrary.so or something like that)
-4. Open project with application librarytestBB10
-5. Compile it and send to device
-6. Enjoy!
