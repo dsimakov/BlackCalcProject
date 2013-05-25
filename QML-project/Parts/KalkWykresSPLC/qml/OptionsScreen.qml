@@ -1,4 +1,5 @@
 import QtQuick 1.0
+import QmlCanvas 1.0
 
 import "graph.js" as GraphFunctions
 /*
@@ -15,26 +16,22 @@ Screen {
         height: parent.height- (parent.height / 11)
 
         Rectangle {
+            id :rect
+            property bool evenClick : false
 
-            id:graph
-            anchors.fill: parent
-            color:"steelblue"
-            property string functionToDraw
-            property double leftX
-            property double rightX
-            property double upY
-            property double downY
-            property double scaleX
-            property double scaleY
-            property double ratioX
-            property double ratioY
-            property int zeroX
-            property int zeroY
+            anchors.fill: parent; color: "lightsteelblue"
 
+            property int test
+            QmlCanvas {
+                id: diagonalLine
 
+                anchors.fill: parent;
+                property string functionToDraw: "sin(x)"
+            }
 
-            MouseArea{
+            MouseArea {
                 anchors.fill: parent
+                id: drawArea
                 property int xmouse
                 property int ymouse
                 property double tmpleftX
@@ -42,56 +39,36 @@ Screen {
                 property double tmpupY
                 property double tmpdownY
 
-                onPressed:
-                {
-                    xmouse=mouseX
-                    ymouse=mouseY
-                    tmpleftX=graph.leftX
-                    tmprightX=graph.rightX
-                    tmpupY=graph.upY
-                    tmpdownY=graph.downY
-                    var l
-                    var r
-                    var u
-                    var d
-                    var deltaX
-                    var deltaY
-                    deltaX=10
-                    deltaY=10
-                    l=tmpleftX+(deltaX*graph.scaleX)
-                    r=tmprightX+(deltaX*graph.scaleX)
-                    u=tmpupY+(deltaY/graph.scaleY)
-                    d=tmpdownY+(deltaY/graph.scaleY)
-
-                    GraphFunctions.recalculateScales(graph,l,r,u,d)
-                    GraphFunctions.testDrawSin(graph)
-                    GraphFunctions.drawGraph(graph)
-
-                }
-
-                onMousePositionChanged: {
-                   /* var l
-                    var r
-                    var u
-                    var d
-                    var deltaX
-                    var deltaY
-                    deltaX=mouseX-xmouse
-                    deltaY=mouseY-ymouse
-                    l=leftX+(deltaX*GraphFunctions.scaleX)
-                    r=rightX+(deltaX*GraphFunctions.scaleX)
-                    u=upY+(deltaY*GraphFunctions.scaleY)
-                    d=downY+(deltaY*GraphFunctions.scaleY)
-
-                    GraphFunctions.recalculateScales(graph,l,r,u,d)
-                    GraphFunctions.drawGraph(graph)*/
-
-                }
-
                 onClicked: {
-                /*    GraphFunctions.recalculateScales(parent,-4,3,1,-2)
-                    GraphFunctions.testDrawSin()
-                    GraphFunctions.drawGraph(parent)*/
+                    diagonalLine.recalculateScales(rect.width,rect.height,-4,3,2,-2);
+
+                    drawArea.xmouse=mouseX
+                    drawArea.ymouse=mouseY
+
+                }
+                onMousePositionChanged: {
+
+                    var l=0.0
+                    var r=0.0
+                    var u=0.0
+                    var d=0.0
+                    var deltaX=0
+                    var deltaY=0
+                    deltaX=drawArea.xmouse-mouseX
+                    deltaY=drawArea.ymouse-mouseY
+                    //FATALBUG najpierwej coś obliczam a potem dane przygotowuję dafuq...
+                    console.log(drawArea.tmpleftX)
+                    console.log(deltaX)
+                    console.log(diagonalLine.fscaleX)
+                    l=drawArea.tmpleftX+(deltaX*diagonalLine.fscaleX)
+                    r=drawArea.tmprightX+(deltaX*diagonalLine.fscaleX)
+                    u=drawArea.tmpupY+(deltaY/diagonalLine.fscaleY)
+                    d=drawArea.tmpdownY+(deltaY/diagonalLine.fscaleY)
+
+                    diagonalLine.recalculateScales(rect.width,rect.height,l,r,u,d)
+                    GraphFunctions.drawGraph(diagonalLine)
+                   /* if(rect.evenClick) { diagonalLine.x1 = mouseX; diagonalLine.y1 = mouseY }
+                    else { diagonalLine.x2 = mouseX; diagonalLine.y2 = mouseY }*/
 
                 }
             }

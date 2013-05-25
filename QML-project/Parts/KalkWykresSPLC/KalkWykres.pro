@@ -85,9 +85,9 @@ OTHER_FILES += \
     qml/PredictionScreen.qml \
     qml/OptionsScreen.qml \
     qml/OptionsList/OptionsScreenItem.qml \
-    qml/ChangeGradePanel.qml \
-    qml/Line.qml
+    qml/ChangeGradePanel.qml
 
-HEADERS +=
+HEADERS += \
+    qmlCanvas.h
 
 RESOURCES +=

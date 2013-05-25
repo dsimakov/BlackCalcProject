@@ -20,7 +20,7 @@ Rectangle {
 
     OptionsScreen {
         state: "visible"
-        titleText: "Kalkulator dyplomowy"
+        titleText: "Rysowanie wykresów"
     }
 }
 
