@@ -38,37 +38,22 @@ Screen {
                 property double tmprightX
                 property double tmpupY
                 property double tmpdownY
-
                 onClicked: {
-                    diagonalLine.recalculateScales(rect.width,rect.height,-4,3,2,-2);
-
+                    diagonalLine.recalculateScales(rect.width,rect.height,-5,5,-2,2);
+                    GraphFunctions.drawGraph(diagonalLine,-5,5);
                     drawArea.xmouse=mouseX
                     drawArea.ymouse=mouseY
 
                 }
                 onMousePositionChanged: {
-
-                    var l=0.0
-                    var r=0.0
-                    var u=0.0
-                    var d=0.0
                     var deltaX=0
                     var deltaY=0
                     deltaX=drawArea.xmouse-mouseX
                     deltaY=drawArea.ymouse-mouseY
-                    //FATALBUG najpierwej coś obliczam a potem dane przygotowuję dafuq...
-                    console.log(drawArea.tmpleftX)
-                    console.log(deltaX)
-                    console.log(diagonalLine.fscaleX)
-                    l=drawArea.tmpleftX+(deltaX*diagonalLine.fscaleX)
-                    r=drawArea.tmprightX+(deltaX*diagonalLine.fscaleX)
-                    u=drawArea.tmpupY+(deltaY/diagonalLine.fscaleY)
-                    d=drawArea.tmpdownY+(deltaY/diagonalLine.fscaleY)
+                    diagonalLine.moveFrameByPixels(deltaX,deltaY);
+                    drawArea.xmouse=mouseX
+                    drawArea.ymouse=mouseY
 
-                    diagonalLine.recalculateScales(rect.width,rect.height,l,r,u,d)
-                    GraphFunctions.drawGraph(diagonalLine)
-                   /* if(rect.evenClick) { diagonalLine.x1 = mouseX; diagonalLine.y1 = mouseY }
-                    else { diagonalLine.x2 = mouseX; diagonalLine.y2 = mouseY }*/
 
                 }
             }

@@ -13,14 +13,6 @@ class QmlCanvas : public QDeclarativeItem
     Q_OBJECT
     Q_PROPERTY(QColor color READ color)
     Q_PROPERTY(int penWidth READ penWidth)
-    Q_PROPERTY(double fleftX READ fleftX )
-    Q_PROPERTY(double frightX READ frightX)
-    Q_PROPERTY(double fupY READ fupY)
-    Q_PROPERTY(double fdownY READ fdownY)
-    Q_PROPERTY(double fscaleX READ fscaleX)
-    Q_PROPERTY(double fscaleY READ fscaleY)
-    Q_PROPERTY(double fzeroX READ fzeroX)
-    Q_PROPERTY(double fzeroY READ fzeroY)
 
 public:
     static QList<QPoint> pointsArray;
@@ -60,30 +52,71 @@ public:
     double fleftX() const { return QmlCanvas::leftX; }
     double frightX() const { return QmlCanvas::rightX; }
     double fupY() const { return QmlCanvas::upY; }
-    double fdownY() const { return QmlCanvas::downY; }
-    double fscaleX() const { return QmlCanvas::scaleX; }
-    double fscaleY() const { return QmlCanvas::scaleY; }
-    double fzeroX() const { return QmlCanvas::zeroX; }
-    double fzeroY() const { return QmlCanvas::zeroY; }
+    int setRoot(int) const { return 0; }
+
 
     /*Methods to draw*/
 
     void drawAxis(QPainter *painter)
     {
-        painter->drawLine(0, QmlCanvas::zeroY, QmlCanvas::width, QmlCanvas::zeroY);
-        painter->drawLine(QmlCanvas::zeroX , 0, QmlCanvas::zeroX, QmlCanvas::height);
+
     }
 
     void drawFunction(QPainter *painter)
     {
-        for(int i=0;i<QmlCanvas::pointsArray.count()-1;++i)
+        std::cout<<"frameMinX="<<QmlCanvas::frameMinX<<" hFM="<<QmlCanvas::horizontalFrameMove<<" LeftX="<<QmlCanvas::leftX<<std::endl;
+        int minx=axisSizeToPixelX(QmlCanvas::frameMinX)+QmlCanvas::horizontalFrameMove+(abs(axisSizeToPixelX(QmlCanvas::minX)-axisSizeToPixelX(QmlCanvas::frameMinX)));
+        int maxx=axisSizeToPixelX(QmlCanvas::frameMaxX)+QmlCanvas::horizontalFrameMove+(abs(axisSizeToPixelX(QmlCanvas::minX)-axisSizeToPixelX(QmlCanvas::frameMinX)));
+        if((minx<0) || (maxx<0))
+            return;
+        for(int i=minx;i<maxx-1;++i)
         {
-            painter->drawLine(QmlCanvas::pointsArray[i].x(),QmlCanvas::pointsArray[i].y(),QmlCanvas::pointsArray[i+1].x(),pointsArray[i+1].y());
+            if((i>0)&&(i<QmlCanvas::pointsArray.count()-1))
+                painter->drawLine((width/2)+QmlCanvas::pointsArray[i].x(),(QmlCanvas::verticalFrameMove)-QmlCanvas::pointsArray[i].y(),(width/2)+QmlCanvas::pointsArray[i+1].x(),(QmlCanvas::verticalFrameMove)-pointsArray[i+1].y());
         }
 
     }
+    Q_INVOKABLE void setMinMaxToCalc(double minX,double maxX)
+    {
+        QmlCanvas::pointsArray.clear();
+        QmlCanvas::minX=minX;
+        QmlCanvas::maxX=maxX;
+    }
 
-    Q_INVOKABLE void recalculateScales(int objectWidth,int objectHeight,double leftX,double rightX,double upY,double downY)
+    Q_INVOKABLE void moveFrameByPixels(int deltaX,int deltaY)
+    {
+        std::cout<<"bef frameMinX="<<QmlCanvas::frameMinX<<std::endl;
+        std::cout<<"bef frameMaxX="<<QmlCanvas::frameMaxX<<std::endl;
+        QmlCanvas::frameMinX+=pixelToAxisSizeX(deltaX);
+        std::cout<<"frameMinX="<<QmlCanvas::frameMinX<<" pTAS="<<pixelToAxisSizeX(deltaX)<<std::endl;
+        QmlCanvas::frameMaxX+=pixelToAxisSizeX(deltaX);
+        std::cout<<"frameMaxX="<<QmlCanvas::frameMaxX<<" pTAS="<<pixelToAxisSizeX(deltaX)<<std::endl;
+        QmlCanvas::verticalFrameMove-=deltaY;
+        update();
+
+    }
+
+    Q_INVOKABLE double pixelToAxisSizeX(int pixelX)
+    {
+        return (QmlCanvas::perOnePixelX*pixelX);
+    }
+    Q_INVOKABLE double pixelToAxisSizeY(int pixelY)
+    {
+        return (QmlCanvas::perOnePixelY*pixelY);
+    }
+
+    Q_INVOKABLE int axisSizeToPixelX(double axisSizeX)
+    {
+        return (axisSizeX/QmlCanvas::perOnePixelX);
+    }
+    Q_INVOKABLE int axisSizeToPixelY(double axisSizeY)
+    {
+        return (axisSizeY/QmlCanvas::perOnePixelY);
+    }
+
+
+
+    Q_INVOKABLE void recalculateScales(int objectWidth,int objectHeight,double leftX,double rightX,double downY,double upY)
     {
         QmlCanvas::leftX=leftX;
         QmlCanvas::rightX=rightX;
@@ -92,50 +125,68 @@ public:
         QmlCanvas::width=objectWidth;
         QmlCanvas::height=objectHeight;
 
-         //przygotowanie informacji do rysowania osi
-        if (!((QmlCanvas::leftX>0) || (QmlCanvas::rightX<0)))
-        {
-            QmlCanvas::ratioY=(abs(upY)*1.0)/(abs(downY)+abs(upY));
-            QmlCanvas::zeroY=QmlCanvas::height*QmlCanvas::ratioY;
-        }
-
-        if (!((QmlCanvas::downY>0) || (QmlCanvas::upY<0)))
-        {
-            QmlCanvas::ratioX=(abs(QmlCanvas::leftX)*1.0)/(abs(QmlCanvas::leftX)+abs(QmlCanvas::rightX));
-            QmlCanvas::zeroX=QmlCanvas::width*QmlCanvas::ratioX;
-        }
-
         //SKALOWANIE DLA X
         /*jeśli różne znaki*/
+        double horizontalSize,horizontalCenter;
         if((QmlCanvas::leftX<0) && (QmlCanvas::rightX>0)){
-        QmlCanvas::scaleX=((abs(QmlCanvas::leftX)+abs(QmlCanvas::rightX))*1.0)/QmlCanvas::width;
+        horizontalSize=abs(QmlCanvas::leftX)+abs(QmlCanvas::rightX);
+        if(abs(leftX)>rightX)
+            {
+                horizontalCenter=-(abs(QmlCanvas::rightX)-abs(QmlCanvas::leftX));
+            }
+        else
+            {
+                horizontalCenter=abs(QmlCanvas::rightX)-abs(QmlCanvas::leftX);
+            }
         } else
             /*jeśli obydwa większe od zera*/
             if((QmlCanvas::leftX>0) && (QmlCanvas::rightX>0))
             {
-            QmlCanvas::scaleX=((abs(QmlCanvas::rightX)-abs(QmlCanvas::leftX))*1.0)/QmlCanvas::width;\
+                horizontalCenter=horizontalSize=(abs(QmlCanvas::rightX)-abs(QmlCanvas::leftX));
+
             } else
                 /*jeśli obydwa mniejsze od zera*/
                 if((QmlCanvas::leftX<0) && (QmlCanvas::rightX<0))
                 {
-                    QmlCanvas::scaleX=((abs(QmlCanvas::leftX)-abs(QmlCanvas::rightX))*1.0)/QmlCanvas::width;
+                    horizontalCenter=horizontalSize=(abs(QmlCanvas::leftX)-abs(QmlCanvas::rightX));
+                    horizontalCenter=-horizontalCenter;
                 }
+        QmlCanvas::perOnePixelX=(horizontalSize*1.0)/width;
+
 
         //SKALOWANIE DLA Y
         /*jeśli różne znaki*/
+        double verticalSize,verticalCenter;
         if((QmlCanvas::upY>0) && (QmlCanvas::downY<0)){
-        QmlCanvas::scaleY=-(QmlCanvas::height*1.0)/(abs(QmlCanvas::upY)+abs(QmlCanvas::downY)); //minus z powodu, że na górze osi Y jest zero a na dole full
-        } else
+            verticalSize=abs(QmlCanvas::upY)+abs(QmlCanvas::downY);
+            if(abs(downY)>upY)
+                {
+                    verticalCenter=-(abs(QmlCanvas::upY)-abs(QmlCanvas::downY));
+                }
+            else
+                {
+                    verticalCenter=abs(QmlCanvas::upY)-abs(QmlCanvas::downY);
+                }
+            } else
             /*jeśli obydwa większe od zera*/
             if((QmlCanvas::upY>0) && (QmlCanvas::downY>0))
             {
-            QmlCanvas::scaleY=-(QmlCanvas::height*1.0)/(abs(QmlCanvas::upY)-abs(QmlCanvas::downY)); //minus z powodu, że na górze osi Y jest zero a na dole full
+                verticalCenter=verticalSize=abs(QmlCanvas::upY)-abs(QmlCanvas::downY);
             } else
                 /*jeśli obydwa mniejsze od zera*/
                 if((QmlCanvas::upY<0) && (QmlCanvas::downY<0))
                 {
-                    QmlCanvas::scaleY=-(QmlCanvas::height*1.0)/(abs(QmlCanvas::downY)-abs(QmlCanvas::upY)); //minus z powodu, że na górze osi Y jest zero a na dole full
+                    verticalCenter=verticalSize=abs(QmlCanvas::downY)-abs(QmlCanvas::upY);
+                    verticalCenter=-verticalCenter;
                 }
+        QmlCanvas::perOnePixelY=(verticalSize*1.0)/height;
+
+        //wyliczanie położenia wykresu w przestrzeni. no raczej przesunięcia środka
+        QmlCanvas::horizontalFrameMove=axisSizeToPixelX(horizontalSize/2.0);
+        QmlCanvas::verticalFrameMove=axisSizeToPixelY(verticalSize/2.0);
+        std::cout<<"hPM="<<QmlCanvas::horizontalFrameMove<<" vPM="<<QmlCanvas::verticalFrameMove<<std::endl;
+        QmlCanvas::frameMinX=leftX;
+        QmlCanvas::frameMaxX=rightX;
         update();
 
     }
@@ -144,7 +195,7 @@ signals:
 
     void colorChanged();
     void penWidthChanged();
-    void xChanged();
+    void onCreate();
 
 
 protected:
@@ -158,12 +209,15 @@ protected:
     static double rightX;
     static double upY;
     static double downY;
-    static double scaleX;
-    static double scaleY;
-    static double ratioX;
-    static double ratioY;
-    static int zeroX;
-    static int zeroY;
+
+    static double minX;
+    static double frameMinX;
+    static double frameMaxX;
+    static double maxX;
+
+    //Zmienne o ile przesunąć rysowane punkty już na wykresie
+    static int horizontalFrameMove;
+    static int verticalFrameMove;
 
     static int width;
     static int height;

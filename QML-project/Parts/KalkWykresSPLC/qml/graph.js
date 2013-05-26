@@ -40,17 +40,15 @@ function testDrawSin()
 }
 
 
-function drawGraph(objectToDrawInto) {
-    var x
-    var y
-           for (var i=0; i<diagonalLine.width; i++) {
-               //console.log(diagonalLine.functionToDraw);
-               x =  diagonalLine.fleftX+(i*diagonalLine.fscaleX);
-               console.log("fleftX:"+diagonalLine.fleftX+" fcaleX:"+diagonalLine.fscaleX+" x:"+x+" i:"+i);
-               y = (eval(diagonalLine.functionToDraw)*diagonalLine.fscaleY)+diagonalLine.fzeroY
-               //console.log("fzeroY:"+diagonalLine.fzeroY+" fcaleY:"+diagonalLine.fscaleY+" y:"+y);
-               //diagonalLine.addPoint(x,y)
-               diagonalLine.addPoint(x,y)
-           }
-
+function drawGraph(objectToDrawInto,minXtoCount,maxXtoCount) {
+    var entryPixelLeftX=diagonalLine.axisSizeToPixelX(minXtoCount);
+    var endPixelRightX=diagonalLine.axisSizeToPixelX(maxXtoCount);
+    diagonalLine.setMinMaxToCalc(minXtoCount,maxXtoCount);
+    for(var i=entryPixelLeftX;i<endPixelRightX;++i)
+    {
+        var x=diagonalLine.pixelToAxisSizeX(i);
+        var result=eval(diagonalLine.functionToDraw);
+        var y=diagonalLine.axisSizeToPixelY(result);
+        diagonalLine.addPoint(i,y);
+    }
 }
