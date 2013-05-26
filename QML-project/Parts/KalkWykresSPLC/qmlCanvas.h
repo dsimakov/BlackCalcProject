@@ -67,12 +67,18 @@ public:
         std::cout<<"frameMinX="<<QmlCanvas::frameMinX<<" hFM="<<QmlCanvas::horizontalFrameMove<<" LeftX="<<QmlCanvas::leftX<<std::endl;
         int minx=axisSizeToPixelX(QmlCanvas::frameMinX)+QmlCanvas::horizontalFrameMove+(abs(axisSizeToPixelX(QmlCanvas::minX)-axisSizeToPixelX(QmlCanvas::frameMinX)));
         int maxx=axisSizeToPixelX(QmlCanvas::frameMaxX)+QmlCanvas::horizontalFrameMove+(abs(axisSizeToPixelX(QmlCanvas::minX)-axisSizeToPixelX(QmlCanvas::frameMinX)));
-        if((minx<0) || (maxx<0))
+        std::cout<<"minx= "<<minx<<" maxx="<<maxx<<std::endl;
+        if(maxx<0)
             return;
+       /* if(minx<0)
+            minx=-minx;*/
         for(int i=minx;i<maxx-1;++i)
         {
-            if((i>0)&&(i<QmlCanvas::pointsArray.count()-1))
-                painter->drawLine((width/2)+QmlCanvas::pointsArray[i].x(),(QmlCanvas::verticalFrameMove)-QmlCanvas::pointsArray[i].y(),(width/2)+QmlCanvas::pointsArray[i+1].x(),(QmlCanvas::verticalFrameMove)-pointsArray[i+1].y());
+            if((i>0)&&(i<QmlCanvas::pointsArray.count()-1)){
+                painter->drawLine(abs(minx)-QmlCanvas::pointsArray[i].x(),(QmlCanvas::verticalFrameMove)+QmlCanvas::pointsArray[i].y(),abs(minx)-QmlCanvas::pointsArray[i+1].x(),(QmlCanvas::verticalFrameMove)+pointsArray[i+1].y());
+               // std::cout<<"x= "<<QmlCanvas::pointsArray[i].x()<<" x+1="<<QmlCanvas::pointsArray[i+1].x()<<std::endl;
+            }
+
         }
 
     }
@@ -87,9 +93,9 @@ public:
     {
         std::cout<<"bef frameMinX="<<QmlCanvas::frameMinX<<std::endl;
         std::cout<<"bef frameMaxX="<<QmlCanvas::frameMaxX<<std::endl;
-        QmlCanvas::frameMinX+=pixelToAxisSizeX(deltaX);
+        QmlCanvas::frameMinX-=pixelToAxisSizeX(deltaX);
         std::cout<<"frameMinX="<<QmlCanvas::frameMinX<<" pTAS="<<pixelToAxisSizeX(deltaX)<<std::endl;
-        QmlCanvas::frameMaxX+=pixelToAxisSizeX(deltaX);
+        QmlCanvas::frameMaxX-=pixelToAxisSizeX(deltaX);
         std::cout<<"frameMaxX="<<QmlCanvas::frameMaxX<<" pTAS="<<pixelToAxisSizeX(deltaX)<<std::endl;
         QmlCanvas::verticalFrameMove-=deltaY;
         update();

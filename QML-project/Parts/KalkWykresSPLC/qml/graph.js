@@ -47,6 +47,8 @@ function drawGraph(objectToDrawInto,minXtoCount,maxXtoCount) {
     for(var i=entryPixelLeftX;i<endPixelRightX;++i)
     {
         var x=diagonalLine.pixelToAxisSizeX(i);
+        if(x==0)
+            x=0.00000000000001;
         var result=eval(diagonalLine.functionToDraw);
         var y=diagonalLine.axisSizeToPixelY(result);
         diagonalLine.addPoint(i,y);
