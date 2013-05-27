@@ -18,7 +18,6 @@ public:
     static QList<QPoint> pointsArray;
 
     Q_INVOKABLE int addPoint(int x, int y) {
-        //QmlCanvas::pointsArray.append(QPoint(x,y));
         QmlCanvas::pointsArray.append(QPoint(x,y));
         std::cout<<"Dodano punkt x:"<<x<<" y:"<<y<<" Ilość elementów:"<<QmlCanvas::pointsArray.count()<<std::endl;
 
@@ -49,10 +48,7 @@ public:
 
     QColor color() const { return QmlCanvas::m_color; }
     int penWidth() const { return QmlCanvas::m_penWidth; }
-    double fleftX() const { return QmlCanvas::leftX; }
-    double frightX() const { return QmlCanvas::rightX; }
-    double fupY() const { return QmlCanvas::upY; }
-    int setRoot(int) const { return 0; }
+
 
 
     /*Methods to draw*/
@@ -64,23 +60,32 @@ public:
 
     void drawFunction(QPainter *painter)
     {
-        std::cout<<"frameMinX="<<QmlCanvas::frameMinX<<" hFM="<<QmlCanvas::horizontalFrameMove<<" LeftX="<<QmlCanvas::leftX<<std::endl;
-        int minx=axisSizeToPixelX(QmlCanvas::frameMinX)+QmlCanvas::horizontalFrameMove+(abs(axisSizeToPixelX(QmlCanvas::minX)-axisSizeToPixelX(QmlCanvas::frameMinX)));
-        int maxx=axisSizeToPixelX(QmlCanvas::frameMaxX)+QmlCanvas::horizontalFrameMove+(abs(axisSizeToPixelX(QmlCanvas::minX)-axisSizeToPixelX(QmlCanvas::frameMinX)));
-        std::cout<<"minx= "<<minx<<" maxx="<<maxx<<std::endl;
-        if(maxx<0)
+        if(QmlCanvas::pointsArray.count()<=0)
             return;
-       /* if(minx<0)
-            minx=-minx;*/
-        for(int i=minx;i<maxx-1;++i)
+        int delta,max;
+        std::cout<<"pointsArray[0].x()="<<QmlCanvas::pointsArray[0].x()<<" LeftX="<<QmlCanvas::leftX<<"axisSizeToPixelX(QmlCanvas::leftX)="<<axisSizeToPixelX(QmlCanvas::leftX)<<std::endl;
+        delta=axisSizeToPixelX(QmlCanvas::leftX)-QmlCanvas::pointsArray[0].x();
+        max=delta+width;
+
+
+        int y1,y2;
+        for(int i=0;i<width-1;++i)
         {
-            if((i>0)&&(i<QmlCanvas::pointsArray.count()-1)){
-                painter->drawLine(abs(minx)-QmlCanvas::pointsArray[i].x(),(QmlCanvas::verticalFrameMove)+QmlCanvas::pointsArray[i].y(),abs(minx)-QmlCanvas::pointsArray[i+1].x(),(QmlCanvas::verticalFrameMove)+pointsArray[i+1].y());
-               // std::cout<<"x= "<<QmlCanvas::pointsArray[i].x()<<" x+1="<<QmlCanvas::pointsArray[i+1].x()<<std::endl;
-            }
+            //obliczanie punktów, sprawdzanei warunków
+            std::cout<<"delta="<<delta<<std::endl;
+            std::cout<<"delta+i="<<delta+i<<std::endl;
+            std::cout<<"QmlCanvas::pointsArray.count()="<<QmlCanvas::pointsArray.count()<<std::endl;
+            if(delta+i>QmlCanvas::pointsArray.count()-2)
+                break;
+            if(delta+i<0)
+                continue;
+            y1=QmlCanvas::pointsArray[delta+i].y();
+            y2=QmlCanvas::pointsArray[delta+i+1].y();
+            std::cout<<"y1="<<y1<<"y2="<<y2<<std::endl;
 
+            //rysowanie jeśli można (jakieś ify i takie tam)
+            painter->drawLine(i,(QmlCanvas::verticalFrameMove)-y1,i+1,(QmlCanvas::verticalFrameMove)-y2);
         }
-
     }
     Q_INVOKABLE void setMinMaxToCalc(double minX,double maxX)
     {
@@ -93,9 +98,9 @@ public:
     {
         std::cout<<"bef frameMinX="<<QmlCanvas::frameMinX<<std::endl;
         std::cout<<"bef frameMaxX="<<QmlCanvas::frameMaxX<<std::endl;
-        QmlCanvas::frameMinX-=pixelToAxisSizeX(deltaX);
+        QmlCanvas::leftX+=pixelToAxisSizeX(deltaX);
         std::cout<<"frameMinX="<<QmlCanvas::frameMinX<<" pTAS="<<pixelToAxisSizeX(deltaX)<<std::endl;
-        QmlCanvas::frameMaxX-=pixelToAxisSizeX(deltaX);
+        QmlCanvas::rightX+=pixelToAxisSizeX(deltaX);
         std::cout<<"frameMaxX="<<QmlCanvas::frameMaxX<<" pTAS="<<pixelToAxisSizeX(deltaX)<<std::endl;
         QmlCanvas::verticalFrameMove-=deltaY;
         update();

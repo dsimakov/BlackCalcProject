@@ -26,7 +26,7 @@ Screen {
                 id: diagonalLine
 
                 anchors.fill: parent;
-                property string functionToDraw: "(sin(x)*sin(x)/x)"
+                property string functionToDraw: "log(x)"
             }
 
             MouseArea {
@@ -39,8 +39,8 @@ Screen {
                 property double tmpupY
                 property double tmpdownY
                 onPressed: {
-                    diagonalLine.recalculateScales(rect.width,rect.height,-10,15,-2,2);
-                    GraphFunctions.drawGraph(diagonalLine,-25,10);
+                    diagonalLine.recalculateScales(rect.width,rect.height,-10,15,-1,1); //prepare window
+                    GraphFunctions.drawGraph(diagonalLine,-25,10); //count points
                     drawArea.xmouse=mouseX
                     drawArea.ymouse=mouseY
 

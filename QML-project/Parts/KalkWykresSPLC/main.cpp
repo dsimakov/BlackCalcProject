@@ -33,7 +33,9 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-     qmlRegisterType<QmlCanvas>("QmlCanvas", 1, 0, "QmlCanvas");
+    QmlCanvas::pointsArray.clear();
+    qmlRegisterType<QmlCanvas>("QmlCanvas", 1, 0, "QmlCanvas");
+
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.setResizeMode(QmlApplicationViewer::SizeRootObjectToView);
