@@ -11,16 +11,13 @@
 class QmlCanvas : public QDeclarativeItem
 {
     Q_OBJECT
-    Q_PROPERTY(QColor color READ color)
-    Q_PROPERTY(int penWidth READ penWidth)
+    //Q_PROPERTY(QColor color READ color)
 
 public:
     static QList<QPoint> pointsArray;
 
     Q_INVOKABLE int addPoint(int x, int y) {
         QmlCanvas::pointsArray.append(QPoint(x,y));
-        std::cout<<"Dodano punkt x:"<<x<<" y:"<<y<<" Ilość elementów:"<<QmlCanvas::pointsArray.count()<<std::endl;
-
         return 0;
          }
 
@@ -29,80 +26,88 @@ public:
     {
         // Important, otherwise the paint method is never called
         setFlag(QGraphicsItem::ItemHasNoContents, false);
+        configureCanvas();
     }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
     {
-        QPen pen(Qt::black, 2);
-        painter->setPen(pen);
+        if(antialiasing)
+            painter->setRenderHint(QPainter::Antialiasing);
+        //painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
         if(smooth() == true) {
             painter->setRenderHint(QPainter::Antialiasing, true);
         }
 
-        drawAxis(painter);
         drawFunction(painter);
     }
 
     // Get methods
 
-    QColor color() const { return QmlCanvas::m_color; }
-    int penWidth() const { return QmlCanvas::m_penWidth; }
+    Q_INVOKABLE void clearCanvas() {
+QmlCanvas::pointsArray.clear();
+        return;
+         }
 
-
-
-    /*Methods to draw*/
-
-    void drawAxis(QPainter *painter)
-    {
-
-    }
+    Q_INVOKABLE void configureCanvas() {
+        antialiasing=true;
+        xMoveMultiplier=1.0;
+        yMoveMultiplier=0.01;
+        return;
+         }
 
     void drawFunction(QPainter *painter)
     {
         if(QmlCanvas::pointsArray.count()<=0)
             return;
-        int delta,max;
-        std::cout<<"pointsArray[0].x()="<<QmlCanvas::pointsArray[0].x()<<" LeftX="<<QmlCanvas::leftX<<"axisSizeToPixelX(QmlCanvas::leftX)="<<axisSizeToPixelX(QmlCanvas::leftX)<<std::endl;
+        QPen penAxis(Qt::gray, 1);
+        QPen penFunction(Qt::red, 2);
+        int delta;
         delta=axisSizeToPixelX(QmlCanvas::leftX)-QmlCanvas::pointsArray[0].x();
-        max=delta+width;
 
-
+        int leftXtoPixel=axisSizeToPixelX(QmlCanvas::leftX);
+        int downYtoPixel=axisSizeToPixelY(QmlCanvas::downY);
         int y1,y2;
+        //rysowanie osi X
+        for(int i=downYtoPixel;i<downYtoPixel+height;++i)
+        {
+            if(i==0)
+            {
+
+                painter->setPen(penAxis);
+                painter->drawLine(0,(QmlCanvas::verticalFrameMove)-i,width,(QmlCanvas::verticalFrameMove)-i);
+            }
+        }
         for(int i=0;i<width-1;++i)
         {
+            //rysowanie osi Y
+            if(leftXtoPixel==0)
+            {
+                painter->setPen(penAxis);
+                painter->drawLine(i,0,i,height);
+            }
+            leftXtoPixel++;
+
             //obliczanie punktów, sprawdzanei warunków
-            std::cout<<"delta="<<delta<<std::endl;
-            std::cout<<"delta+i="<<delta+i<<std::endl;
-            std::cout<<"QmlCanvas::pointsArray.count()="<<QmlCanvas::pointsArray.count()<<std::endl;
             if(delta+i>QmlCanvas::pointsArray.count()-2)
-                break;
+                continue;
             if(delta+i<0)
                 continue;
             y1=QmlCanvas::pointsArray[delta+i].y();
             y2=QmlCanvas::pointsArray[delta+i+1].y();
-            std::cout<<"y1="<<y1<<"y2="<<y2<<std::endl;
 
             //rysowanie jeśli można (jakieś ify i takie tam)
+            painter->setPen(penFunction);
             painter->drawLine(i,(QmlCanvas::verticalFrameMove)-y1,i+1,(QmlCanvas::verticalFrameMove)-y2);
         }
-    }
-    Q_INVOKABLE void setMinMaxToCalc(double minX,double maxX)
-    {
-        QmlCanvas::pointsArray.clear();
-        QmlCanvas::minX=minX;
-        QmlCanvas::maxX=maxX;
     }
 
     Q_INVOKABLE void moveFrameByPixels(int deltaX,int deltaY)
     {
-        std::cout<<"bef frameMinX="<<QmlCanvas::frameMinX<<std::endl;
-        std::cout<<"bef frameMaxX="<<QmlCanvas::frameMaxX<<std::endl;
-        QmlCanvas::leftX+=pixelToAxisSizeX(deltaX);
-        std::cout<<"frameMinX="<<QmlCanvas::frameMinX<<" pTAS="<<pixelToAxisSizeX(deltaX)<<std::endl;
-        QmlCanvas::rightX+=pixelToAxisSizeX(deltaX);
-        std::cout<<"frameMaxX="<<QmlCanvas::frameMaxX<<" pTAS="<<pixelToAxisSizeX(deltaX)<<std::endl;
-        QmlCanvas::verticalFrameMove-=deltaY;
+        QmlCanvas::leftX+=pixelToAxisSizeX(deltaX)*xMoveMultiplier;
+        QmlCanvas::rightX+=pixelToAxisSizeX(deltaX)*xMoveMultiplier;
+        QmlCanvas::horizontalFrameMove-=axisSizeToPixelX(deltaY)*yMoveMultiplier;
+        QmlCanvas::verticalFrameMove-=axisSizeToPixelY(deltaY)*yMoveMultiplier;
         update();
 
     }
@@ -195,36 +200,21 @@ public:
         //wyliczanie położenia wykresu w przestrzeni. no raczej przesunięcia środka
         QmlCanvas::horizontalFrameMove=axisSizeToPixelX(horizontalSize/2.0);
         QmlCanvas::verticalFrameMove=axisSizeToPixelY(verticalSize/2.0);
-        std::cout<<"hPM="<<QmlCanvas::horizontalFrameMove<<" vPM="<<QmlCanvas::verticalFrameMove<<std::endl;
-        QmlCanvas::frameMinX=leftX;
-        QmlCanvas::frameMaxX=rightX;
         update();
 
     }
 
 signals:
 
-    void colorChanged();
-    void penWidthChanged();
     void onCreate();
 
 
 protected:
-    void updateSize() {
-    }
-
-    static QColor m_color;
-    static int m_penWidth;
 
     static double leftX;
     static double rightX;
     static double upY;
     static double downY;
-
-    static double minX;
-    static double frameMinX;
-    static double frameMaxX;
-    static double maxX;
 
     //Zmienne o ile przesunąć rysowane punkty już na wykresie
     static int horizontalFrameMove;
@@ -234,6 +224,12 @@ protected:
     static int height;
     static double perOnePixelX; //dopisać funkcje odwrotne
     static double perOnePixelY; //dopisać funkcje odwrotne
+
+    //opcje
+    bool antialiasing;
+    float xMoveMultiplier;
+    float yMoveMultiplier;
+
 };
 
 QML_DECLARE_TYPE(QmlCanvas)

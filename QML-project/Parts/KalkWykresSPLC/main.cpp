@@ -9,9 +9,6 @@
 
 QList<QPoint> QmlCanvas::pointsArray;
 
-QColor QmlCanvas::m_color(Qt::black);
-int QmlCanvas::m_penWidth;
-
 double QmlCanvas::leftX;
 double QmlCanvas::rightX;
 double QmlCanvas::upY;
@@ -21,11 +18,6 @@ int QmlCanvas::height;
 
 int QmlCanvas::horizontalFrameMove;
 int QmlCanvas::verticalFrameMove;
-
-double QmlCanvas::minX;
-double QmlCanvas::maxX;
-double QmlCanvas::frameMinX;
-double QmlCanvas::frameMaxX;
 
 double QmlCanvas::perOnePixelX; //dopisać funkcje odwrotne
 double QmlCanvas::perOnePixelY; //dopisać funkcje odwrotne

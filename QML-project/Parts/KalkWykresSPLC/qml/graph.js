@@ -35,21 +35,29 @@ function log(x)
 function testDrawSin()
 {
     objectToDrawInto.functionToDraw="sin(x)"
-
-
 }
 
 
 function drawGraph(objectToDrawInto,minXtoCount,maxXtoCount) {
     var entryPixelLeftX=diagonalLine.axisSizeToPixelX(minXtoCount);
     var endPixelRightX=diagonalLine.axisSizeToPixelX(maxXtoCount);
-    diagonalLine.setMinMaxToCalc(minXtoCount,maxXtoCount);
+    diagonalLine.clearCanvas();
     for(var i=entryPixelLeftX;i<endPixelRightX;++i)
     {
         var x=diagonalLine.pixelToAxisSizeX(i);
         if(x==0)
             x=0.00000000000001;
-        var result=eval(diagonalLine.functionToDraw);
+        var result
+        try
+          {
+          //Run some code here
+            result=eval(diagonalLine.functionToDraw);
+          }
+        catch(err)
+          {
+          //Handle errors here
+            console.log("Function Error!");
+          }
         var y=diagonalLine.axisSizeToPixelY(result);
         diagonalLine.addPoint(i,y);
     }
