@@ -10,14 +10,23 @@ Screen {
     id: screen
     property alias functionString: rect.func
     function show(functionString,frameLeft,frameRight,frameDown,frameUp,drawMinX,drawMaxX) {
-        /*diagonalLine.recalculateScales(rect.width,rect.height,-10,15,-5,5); //prepare window
-        GraphFunctions.drawGraph(diagonalLine.functionToDraw,-125,110); //count points
-*/
+        frameLeftActive=frameLeft
+        frameRightActive=frameRight
+        frameDownActive=frameDown
+        frameUpActive=frameUp
+        drawMinXActive=drawMinX
+        drawMaxXActive=drawMaxX
         error.visible=false;
         diagonalLine.functionToDraw=functionString;
         diagonalLine.recalculateScales(rect.width,rect.height,frameLeft,frameRight,frameDown,frameUp); //prepare window
         GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinX,drawMaxX); //count points
         }
+    property double frameLeftActive
+    property double frameRightActive
+    property double frameDownActive
+    property double frameUpActive
+    property double drawMinXActive
+    property double drawMaxXActive
 
     Rectangle {
         id: prediction
@@ -37,7 +46,6 @@ Screen {
                 id: diagonalLine
 
                 anchors.fill: parent;
-
                 property string functionToDraw
             }
 
@@ -83,5 +91,116 @@ Screen {
         visible:false
 
 
+    }
+    Rectangle{
+        id:zoomContainer
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        width: parent.width/3
+        height: parent.height/4
+        color: "transparent"
+    Rectangle{
+        id:zoom
+        width: zoomContainer.width-20
+        height: zoomContainer.height-20
+        property int ew: (width)/2
+        property int eh: (height)/4
+
+        Column { /* inner column */
+            width: parent.width
+            height: parent.height
+                Row { /* inner row */
+                        Rectangle { width: 2*zoom.ew+10; height: zoom.eh; color: "transparent"
+                            Text {anchors.centerIn: parent
+                                id: zoomText
+                                text: qsTr("zoom")
+                                font.pixelSize: parent.height*0.9
+                            }}
+
+                      }
+                Row { /* inner row */
+                        spacing:10
+                        Rectangle { width: zoom.ew; height: zoom.eh; border.color: "black";  color: "steelblue"; radius: 5
+                            Text {anchors.centerIn: parent
+                                text: qsTr("+")
+                                font.pixelSize: parent.height*0.9
+                            }
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                frameLeftActive/=2.0
+                                frameRightActive/=2.0
+                                diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
+                                GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinXActive,drawMaxXActive);
+                            }
+                        }}
+                        Rectangle { width: zoom.ew; height: zoom.eh; border.color: "black";  color: "steelblue"; radius: 5
+                            Text {anchors.centerIn: parent
+                                text: qsTr("+")
+                                font.pixelSize: parent.height*0.9
+                            }
+                            MouseArea{
+                                anchors.fill: parent
+                                onClicked: {
+                                    frameUpActive/=2.0
+                                    frameDownActive/=2.0
+                                    diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
+                                    GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinXActive,drawMaxXActive);
+                                }
+                            }}
+
+                      }
+                Row { /* inner row */
+                    spacing:10
+                        Rectangle { width: zoom.ew; height: zoom.eh;  color: "transparent"
+                            Text {anchors.centerIn: parent
+                                id: xText
+                                text: qsTr("X")
+                                font.pixelSize: parent.height*0.9
+                            }}
+                        Rectangle { width: zoom.ew; height: zoom.eh;  color: "transparent"
+                            Text {anchors.centerIn: parent
+                                id: yText
+                                text: qsTr("Y")
+                                font.pixelSize: parent.height*0.9
+                            }}
+                }
+                Row { /* inner row */
+                    spacing:10
+                        Rectangle { width: zoom.ew; height: zoom.eh; border.color: "black";  color: "steelblue"; radius: 5
+                            Text {anchors.centerIn: parent
+                                text: qsTr("-")
+                                font.pixelSize: parent.height*0.9
+                            }
+                            MouseArea{
+                                anchors.fill: parent
+                                onClicked: {
+                                    frameLeftActive*=2.0
+                                    frameRightActive*=2.0
+                                    diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
+                                    GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinXActive,drawMaxXActive);
+                                }
+                            }}
+                        Rectangle { width: zoom.ew; height: zoom.eh; border.color: "black";  color: "steelblue"; radius: 5
+                            Text {anchors.centerIn: parent
+                                text: qsTr("-")
+                                font.pixelSize: parent.height*0.9
+                            }
+                            MouseArea{
+                                anchors.fill: parent
+                                onClicked: {
+                                    frameUpActive*=2.0
+                                    frameDownActive*=2.0
+                                    diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
+                                    GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinXActive,drawMaxXActive);
+                                }
+                            }}
+                }
+        }
+        color: "transparent"
+        radius: 5;
+        visible:true
+
+}
     }
 }

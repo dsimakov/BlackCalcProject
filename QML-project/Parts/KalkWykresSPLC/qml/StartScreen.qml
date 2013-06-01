@@ -82,8 +82,8 @@ Screen {
                                                     height: main.height / 10
                                                     property real leftFrame: -5.0
                                                     property real rightFrame: 5.0
-                                                    property real downFrame: -5.0
-                                                    property real upFrame: 5.0
+                                                    property real downFrame: -2.0
+                                                    property real upFrame: 2.0
                                                     property real minXGraph: -10.0
                                                     property real maxXGraph: 10.0
 

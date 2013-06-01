@@ -9,17 +9,15 @@
 
 QList<QPoint> QmlCanvas::pointsArray;
 
-double QmlCanvas::leftX;
-double QmlCanvas::rightX;
-double QmlCanvas::upY;
-double QmlCanvas::downY;
+long double QmlCanvas::leftX;
+long double QmlCanvas::rightX;
+long double QmlCanvas::upY;
+long double QmlCanvas::downY;
 int QmlCanvas::width;
 int QmlCanvas::height;
 
-int QmlCanvas::verticalFrameMove;
-
-double QmlCanvas::perOnePixelX; //dopisać funkcje odwrotne
-double QmlCanvas::perOnePixelY; //dopisać funkcje odwrotne
+long double QmlCanvas::perOnePixelX; //dopisać funkcje odwrotne
+long double QmlCanvas::perOnePixelY; //dopisać funkcje odwrotne
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

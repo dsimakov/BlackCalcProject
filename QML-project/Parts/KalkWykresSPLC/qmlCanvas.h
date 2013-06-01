@@ -44,14 +44,14 @@ public:
     // Get methods
 
     Q_INVOKABLE void clearCanvas() {
-QmlCanvas::pointsArray.clear();
+    QmlCanvas::pointsArray.clear();
         return;
          }
 
     Q_INVOKABLE void configureCanvas() {
         antialiasing=true;
         xMoveMultiplier=1.0;
-        yMoveMultiplier=0.01;
+        yMoveMultiplier=1.0;
         return;
          }
 
@@ -59,55 +59,47 @@ QmlCanvas::pointsArray.clear();
     {
         if(QmlCanvas::pointsArray.count()<=0)
             return;
-        QPen penAxis(Qt::gray, 2);
+        QPen penAxis(Qt::black, 2);
         QPen penHelpAxis(Qt::gray, 1);
         QPen penHelpAxisText(Qt::black, 1);
         QPen penFunction(Qt::red, 2);
-        //QFont font=painter->font() ;
-        //font.setPointSize ( 12 );
+        QFont font=painter->font() ;
+        font.setPointSize ( 10 );
+        painter->setFont(font);
         int delta;
         delta=axisSizeToPixelX(QmlCanvas::leftX)-QmlCanvas::pointsArray[0].x();
 
         int leftXtoPixel=axisSizeToPixelX(QmlCanvas::leftX);
         int downYtoPixel=axisSizeToPixelY(QmlCanvas::downY);
+        int upYtoPixel=axisSizeToPixelY(QmlCanvas::upY);
         int YPixels=axisSizeToPixelY(0)+axisSizeToPixelY(QmlCanvas::upY);
         int y1,y2;
-        //rysowanie osi X
-        std::cout<<"NEW PAINT"<<std::endl;
-        for(int i=downYtoPixel;i<downYtoPixel+height;++i)
+        for(int i=downYtoPixel;i<upYtoPixel;++i)
         {
-            if(i%50==0)
+            if(i%(height/10)==0)
             {
+                painter->setPen(penHelpAxis);
+                painter->drawLine(0,(YPixels)-i,width,(YPixels)-i);
+
                 painter->setPen(penHelpAxisText);
-                //((QmlCanvas::verticalFrameMove)-i)
-                painter->drawText(20,i,QString::number(pixelToAxisSizeY(i)));
-                std::cout<<"QmlCanvas::verticalFrameMove:"<<QmlCanvas::verticalFrameMove<<", yPixels:"<<YPixels<<std::endl;
-                std::cout<<" i:"<<i<<std::endl;
-                /*painter->setPen(penHelpAxis);
-                painter->drawLine(0,(QmlCanvas::verticalFrameMove)-i,width,(QmlCanvas::verticalFrameMove)-i);
-                std::cout<<"vfm:"<<QmlCanvas::verticalFrameMove<<", i:"<<i<<std::endl;*/
-
-                 //font.setWeight(QFont::DemiBold);
-                 //painter->setFont(font);
-
+                painter->drawText(20,(YPixels)-i,QString::number(pixelToAxisSizeY(i),'g',3));
             }
             if(i==0)
             {
 
                 painter->setPen(penAxis);
-                painter->drawLine(0,(QmlCanvas::verticalFrameMove)-i,width,(QmlCanvas::verticalFrameMove)-i);
+                painter->drawLine(0,(YPixels)-i,width,(YPixels)-i);
             }
         }
         for(int i=0;i<width-1;++i)
         {
-
             //rysowanie osi Y
-            if(leftXtoPixel%100==0)
+            if(leftXtoPixel%(height/10)==0)
             {
                 painter->setPen(penHelpAxis);
                 painter->drawLine(i,0,i,height);
                 painter->setPen(penHelpAxisText);
-                painter->drawText(i-20,height-(height/30),QString::number(pixelToAxisSizeX(leftXtoPixel)));
+                painter->drawText(i-20,height-(height/30),QString::number(pixelToAxisSizeX(leftXtoPixel),'g',3));
             }
             if(leftXtoPixel==0)
             {
@@ -126,7 +118,7 @@ QmlCanvas::pointsArray.clear();
 
             //rysowanie jeśli można (jakieś ify i takie tam)
             painter->setPen(penFunction);
-            painter->drawLine(i,(QmlCanvas::verticalFrameMove)-y1,i+1,(QmlCanvas::verticalFrameMove)-y2);
+            painter->drawLine(i,(YPixels)-y1,i+1,(YPixels)-y2);
         }
     }
 
@@ -134,11 +126,9 @@ QmlCanvas::pointsArray.clear();
     {
         QmlCanvas::leftX+=pixelToAxisSizeX(deltaX)*xMoveMultiplier;
         QmlCanvas::rightX+=pixelToAxisSizeX(deltaX)*xMoveMultiplier;
-        //QmlCanvas::horizontalFrameMove-=axisSizeToPixelX(deltaY)*yMoveMultiplier;
         QmlCanvas::downY-=pixelToAxisSizeY(deltaY)*yMoveMultiplier;
         QmlCanvas::upY-=pixelToAxisSizeY(deltaY)*yMoveMultiplier;
-        QmlCanvas::verticalFrameMove-=axisSizeToPixelY(deltaY)*yMoveMultiplier;
-        std::cout<<"new renges: l:"<<QmlCanvas::leftX<<",r:"<<QmlCanvas::rightX<<",d:"<<QmlCanvas::downY<<",u:"<<QmlCanvas::upY<<std::endl;
+        //std::cout<<"new renges: l:"<<QmlCanvas::leftX<<",r:"<<QmlCanvas::rightX<<",d:"<<QmlCanvas::downY<<",u:"<<QmlCanvas::upY<<std::endl;
         update();
 
     }
@@ -171,10 +161,11 @@ QmlCanvas::pointsArray.clear();
         QmlCanvas::downY=downY;
         QmlCanvas::width=objectWidth;
         QmlCanvas::height=objectHeight;
+        std::cout<<"new ranges: l:"<< QmlCanvas::leftX<<",r:"<< QmlCanvas::rightX<<",d:"<<QmlCanvas::downY <<",u:"<<QmlCanvas::upY <<std::endl;
 
         //SKALOWANIE DLA X
         /*jeśli różne znaki*/
-        double horizontalSize,horizontalCenter;
+        long double horizontalSize,horizontalCenter;
         if((QmlCanvas::leftX<0) && (QmlCanvas::rightX>0)){
         horizontalSize=abs(QmlCanvas::leftX)+abs(QmlCanvas::rightX);
         if(abs(leftX)>rightX)
@@ -199,7 +190,7 @@ QmlCanvas::pointsArray.clear();
                     horizontalCenter=-horizontalCenter;
                 }
         QmlCanvas::perOnePixelX=(horizontalSize*1.0)/width;
-
+        std::cout<<"QmlCanvas::perOnePixelX="<<QmlCanvas::perOnePixelX<<std::endl;
 
         //SKALOWANIE DLA Y
         /*jeśli różne znaki*/
@@ -227,10 +218,7 @@ QmlCanvas::pointsArray.clear();
                     verticalCenter=-verticalCenter;
                 }
         QmlCanvas::perOnePixelY=(verticalSize*1.0)/height;
-
-        //wyliczanie położenia wykresu w przestrzeni. no raczej przesunięcia środka
-        //QmlCanvas::horizontalFrameMove=axisSizeToPixelX(horizontalSize/2.0);
-        QmlCanvas::verticalFrameMove=axisSizeToPixelY(verticalSize/2.0);
+        std::cout<<"QmlCanvas::perOnePixelY="<<QmlCanvas::perOnePixelY<<std::endl;
         update();
 
     }
@@ -242,18 +230,15 @@ signals:
 
 protected:
 
-    static double leftX;
-    static double rightX;
-    static double upY;
-    static double downY;
-
-    //Zmienne o ile przesunąć rysowane punkty już na wykresie
-    static int verticalFrameMove;
+    static long double leftX;
+    static long double rightX;
+    static long double upY;
+    static long double downY;
 
     static int width;
     static int height;
-    static double perOnePixelX; //dopisać funkcje odwrotne
-    static double perOnePixelY; //dopisać funkcje odwrotne
+    static long double perOnePixelX; //dopisać funkcje odwrotne
+    static long double perOnePixelY; //dopisać funkcje odwrotne
 
     //opcje
     bool antialiasing;
