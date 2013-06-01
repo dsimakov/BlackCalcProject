@@ -1,4 +1,3 @@
-//import Qt 4.7
 import QtQuick 1.0
 
 /*
@@ -18,7 +17,7 @@ Rectangle {
         GradientStop { position: 1.0; color: "gray" }
     }
 
-    OptionsScreen {
+    StartScreen {
         state: "visible"
         titleText: "Rysowanie wykresów"
     }

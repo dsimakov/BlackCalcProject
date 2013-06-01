@@ -32,31 +32,45 @@ function log(x)
     return Math.log(x)
 }
 
+function abs(x)
+{
+    return Math.abs(x)
+}
+
+function exp(x)
+{
+    return Math.exp(x)
+}
+
+function pow(x,y)
+{
+    return Math.pow(x,y)
+}
+
 function testDrawSin()
 {
     objectToDrawInto.functionToDraw="sin(x)"
 }
 
 
-function drawGraph(objectToDrawInto,minXtoCount,maxXtoCount) {
+function drawGraph(functionToDraw,minXtoCount,maxXtoCount) {
     var entryPixelLeftX=diagonalLine.axisSizeToPixelX(minXtoCount);
     var endPixelRightX=diagonalLine.axisSizeToPixelX(maxXtoCount);
     diagonalLine.clearCanvas();
     for(var i=entryPixelLeftX;i<endPixelRightX;++i)
     {
         var x=diagonalLine.pixelToAxisSizeX(i);
+        //tego poniżej tu nie ma. proszę pominąć poniższe 2 linijki w trakcie czytania kodu
         if(x==0)
-            x=0.00000000000001;
+            x=0.00000000000000000001;
         var result
         try
           {
-          //Run some code here
-            result=eval(diagonalLine.functionToDraw);
+            result=eval(functionToDraw);
           }
         catch(err)
           {
-          //Handle errors here
-            console.log("Function Error!");
+            error.visible=true;
           }
         var y=diagonalLine.axisSizeToPixelY(result);
         diagonalLine.addPoint(i,y);

@@ -16,7 +16,6 @@ double QmlCanvas::downY;
 int QmlCanvas::width;
 int QmlCanvas::height;
 
-int QmlCanvas::horizontalFrameMove;
 int QmlCanvas::verticalFrameMove;
 
 double QmlCanvas::perOnePixelX; //dopisać funkcje odwrotne
@@ -29,7 +28,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<QmlCanvas>("QmlCanvas", 1, 0, "QmlCanvas");
 
     QmlApplicationViewer viewer;
-    viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
+    viewer.setOrientation(QmlApplicationViewer::ScreenOrientationLockLandscape);
     viewer.setResizeMode(QmlApplicationViewer::SizeRootObjectToView);
     viewer.setMainQmlFile(QLatin1String("qml/main.qml"));
     //viewer.setWindowState(Qt::WindowFullScreen);
