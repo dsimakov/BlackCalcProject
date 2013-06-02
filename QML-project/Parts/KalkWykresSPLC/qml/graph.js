@@ -57,6 +57,7 @@ function drawGraph(functionToDraw,minXtoCount,maxXtoCount) {
     var entryPixelLeftX=diagonalLine.axisSizeToPixelX(minXtoCount);
     var endPixelRightX=diagonalLine.axisSizeToPixelX(maxXtoCount);
     diagonalLine.clearCanvas();
+console.log(">>>>>>>>>>>>>>>>>axisSizeToPixelY(1.0):",diagonalLine.axisSizeToPixelY(1.0))
     for(var i=entryPixelLeftX;i<endPixelRightX;++i)
     {
         var x=diagonalLine.pixelToAxisSizeX(i);
@@ -74,5 +75,6 @@ function drawGraph(functionToDraw,minXtoCount,maxXtoCount) {
           }
         var y=diagonalLine.axisSizeToPixelY(result);
         diagonalLine.addPoint(i,y);
+        //console.log("add point result:"+result+" x:"+x+" y:"+y)
     }
 }

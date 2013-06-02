@@ -21,6 +21,10 @@ public:
         return 0;
          }
 
+    Q_INVOKABLE void updateCanvas() {
+        update();
+         }
+
     QmlCanvas(QDeclarativeItem *parent = 0) :
             QDeclarativeItem(parent)
     {
@@ -44,7 +48,7 @@ public:
     // Get methods
 
     Q_INVOKABLE void clearCanvas() {
-    QmlCanvas::pointsArray.clear();
+        QmlCanvas::pointsArray.clear();
         return;
          }
 
@@ -55,10 +59,18 @@ public:
         return;
          }
 
+    void drawRotatedText(QPainter *painter, float degrees, int x, int y, const QString &text)
+    {
+      painter->save();
+      painter->translate(x, y);
+      painter->rotate(degrees);
+      painter->drawText(0, 0, text);
+      painter->restore();
+    }
+
     void drawFunction(QPainter *painter)
     {
-        if(QmlCanvas::pointsArray.count()<=0)
-            return;
+
         QPen penAxis(Qt::black, 2);
         QPen penHelpAxis(Qt::gray, 1);
         QPen penHelpAxisText(Qt::black, 1);
@@ -66,8 +78,7 @@ public:
         QFont font=painter->font() ;
         font.setPointSize ( 10 );
         painter->setFont(font);
-        int delta;
-        delta=axisSizeToPixelX(QmlCanvas::leftX)-QmlCanvas::pointsArray[0].x();
+
 
         int leftXtoPixel=axisSizeToPixelX(QmlCanvas::leftX);
         int downYtoPixel=axisSizeToPixelY(QmlCanvas::downY);
@@ -99,7 +110,8 @@ public:
                 painter->setPen(penHelpAxis);
                 painter->drawLine(i,0,i,height);
                 painter->setPen(penHelpAxisText);
-                painter->drawText(i-20,height-(height/30),QString::number(pixelToAxisSizeX(leftXtoPixel),'g',3));
+                drawRotatedText(painter,90,i,height-(height/9),QString::number(pixelToAxisSizeX(leftXtoPixel),'g',3));
+                //painter->drawText(i-20,height-(height/30),QString::number(pixelToAxisSizeX(leftXtoPixel),'g',3));
             }
             if(leftXtoPixel==0)
             {
@@ -108,17 +120,21 @@ public:
             }
             leftXtoPixel++;
 
+            if(QmlCanvas::pointsArray.count()>0){
             //obliczanie punktów, sprawdzanei warunków
+            int delta;
+            delta=axisSizeToPixelX(QmlCanvas::leftX)-QmlCanvas::pointsArray[0].x();
             if(delta+i>QmlCanvas::pointsArray.count()-2)
                 continue;
             if(delta+i<0)
                 continue;
+
             y1=QmlCanvas::pointsArray[delta+i].y();
             y2=QmlCanvas::pointsArray[delta+i+1].y();
 
             //rysowanie jeśli można (jakieś ify i takie tam)
             painter->setPen(penFunction);
-            painter->drawLine(i,(YPixels)-y1,i+1,(YPixels)-y2);
+            painter->drawLine(i,(YPixels)-y1,i+1,(YPixels)-y2);}
         }
     }
 
@@ -128,7 +144,7 @@ public:
         QmlCanvas::rightX+=pixelToAxisSizeX(deltaX)*xMoveMultiplier;
         QmlCanvas::downY-=pixelToAxisSizeY(deltaY)*yMoveMultiplier;
         QmlCanvas::upY-=pixelToAxisSizeY(deltaY)*yMoveMultiplier;
-        //std::cout<<"new renges: l:"<<QmlCanvas::leftX<<",r:"<<QmlCanvas::rightX<<",d:"<<QmlCanvas::downY<<",u:"<<QmlCanvas::upY<<std::endl;
+        std::cout<<"new renges: l:"<<QmlCanvas::leftX<<",r:"<<QmlCanvas::rightX<<",d:"<<QmlCanvas::downY<<",u:"<<QmlCanvas::upY<<std::endl;
         update();
 
     }
@@ -151,6 +167,15 @@ public:
         return (axisSizeY/QmlCanvas::perOnePixelY);
     }
 
+    Q_INVOKABLE double axisSizeToPixelY2(double axisSizeY)
+    {
+        return (axisSizeY/QmlCanvas::perOnePixelY);
+    }
+
+    Q_INVOKABLE double absf(double value)
+    {
+        return value < 0.0f ? -value : value;
+    }
 
 
     Q_INVOKABLE void recalculateScales(int objectWidth,int objectHeight,double leftX,double rightX,double downY,double upY)
@@ -161,66 +186,63 @@ public:
         QmlCanvas::downY=downY;
         QmlCanvas::width=objectWidth;
         QmlCanvas::height=objectHeight;
-        std::cout<<"new ranges: l:"<< QmlCanvas::leftX<<",r:"<< QmlCanvas::rightX<<",d:"<<QmlCanvas::downY <<",u:"<<QmlCanvas::upY <<std::endl;
+        //std::cout<<"ranges: l:"<<QmlCanvas::leftX<<",r:"<<QmlCanvas::rightX<<",d:"<<QmlCanvas::downY<<",u:"<<QmlCanvas::upY<<std::endl;
 
         //SKALOWANIE DLA X
         /*jeśli różne znaki*/
-        long double horizontalSize,horizontalCenter;
+        double horizontalSize,horizontalCenter;
         if((QmlCanvas::leftX<0) && (QmlCanvas::rightX>0)){
-        horizontalSize=abs(QmlCanvas::leftX)+abs(QmlCanvas::rightX);
-        if(abs(leftX)>rightX)
+        horizontalSize=absf(QmlCanvas::leftX)+absf(QmlCanvas::rightX);
+        horizontalSize*=1.0;
+        if(absf(leftX)>rightX)
             {
-                horizontalCenter=-(abs(QmlCanvas::rightX)-abs(QmlCanvas::leftX));
+                horizontalCenter=-(absf(QmlCanvas::rightX)-absf(QmlCanvas::leftX));
             }
         else
             {
-                horizontalCenter=abs(QmlCanvas::rightX)-abs(QmlCanvas::leftX);
+                horizontalCenter=absf(QmlCanvas::rightX)-absf(QmlCanvas::leftX);
             }
         } else
             /*jeśli obydwa większe od zera*/
             if((QmlCanvas::leftX>0) && (QmlCanvas::rightX>0))
             {
-                horizontalCenter=horizontalSize=(abs(QmlCanvas::rightX)-abs(QmlCanvas::leftX));
+                horizontalCenter=horizontalSize=(absf(QmlCanvas::rightX)-absf(QmlCanvas::leftX));
 
             } else
                 /*jeśli obydwa mniejsze od zera*/
                 if((QmlCanvas::leftX<0) && (QmlCanvas::rightX<0))
                 {
-                    horizontalCenter=horizontalSize=(abs(QmlCanvas::leftX)-abs(QmlCanvas::rightX));
+                    horizontalCenter=horizontalSize=(absf(QmlCanvas::leftX)-absf(QmlCanvas::rightX));
                     horizontalCenter=-horizontalCenter;
                 }
         QmlCanvas::perOnePixelX=(horizontalSize*1.0)/width;
-        std::cout<<"QmlCanvas::perOnePixelX="<<QmlCanvas::perOnePixelX<<std::endl;
 
         //SKALOWANIE DLA Y
         /*jeśli różne znaki*/
         double verticalSize,verticalCenter;
         if((QmlCanvas::upY>0) && (QmlCanvas::downY<0)){
-            verticalSize=abs(QmlCanvas::upY)+abs(QmlCanvas::downY);
-            if(abs(downY)>upY)
+            verticalSize=absf(QmlCanvas::upY)+absf(QmlCanvas::downY);
+            if(absf(downY)>upY)
                 {
-                    verticalCenter=-(abs(QmlCanvas::upY)-abs(QmlCanvas::downY));
+                    verticalCenter=-(absf(QmlCanvas::upY)-absf(QmlCanvas::downY));
                 }
             else
                 {
-                    verticalCenter=abs(QmlCanvas::upY)-abs(QmlCanvas::downY);
+                    verticalCenter=absf(QmlCanvas::upY)-absf(QmlCanvas::downY);
                 }
             } else
             /*jeśli obydwa większe od zera*/
             if((QmlCanvas::upY>0) && (QmlCanvas::downY>0))
             {
-                verticalCenter=verticalSize=abs(QmlCanvas::upY)-abs(QmlCanvas::downY);
+                verticalCenter=verticalSize=absf(QmlCanvas::upY)-absf(QmlCanvas::downY);
             } else
                 /*jeśli obydwa mniejsze od zera*/
                 if((QmlCanvas::upY<0) && (QmlCanvas::downY<0))
                 {
-                    verticalCenter=verticalSize=abs(QmlCanvas::downY)-abs(QmlCanvas::upY);
+                    verticalCenter=verticalSize=absf(QmlCanvas::downY)-absf(QmlCanvas::upY);
                     verticalCenter=-verticalCenter;
                 }
         QmlCanvas::perOnePixelY=(verticalSize*1.0)/height;
-        std::cout<<"QmlCanvas::perOnePixelY="<<QmlCanvas::perOnePixelY<<std::endl;
-        update();
-
     }
 
 signals:
@@ -237,8 +259,8 @@ protected:
 
     static int width;
     static int height;
-    static long double perOnePixelX; //dopisać funkcje odwrotne
-    static long double perOnePixelY; //dopisać funkcje odwrotne
+    static double perOnePixelX; //dopisać funkcje odwrotne
+    static double perOnePixelY; //dopisać funkcje odwrotne
 
     //opcje
     bool antialiasing;

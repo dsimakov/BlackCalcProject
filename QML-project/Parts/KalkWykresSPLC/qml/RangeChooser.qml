@@ -45,7 +45,6 @@ Item {
         id:shadow
         width: parent.width
         height: parent.height
-        visible: isVisible
         color: "black"
         opacity: 0.0
 

@@ -9,7 +9,28 @@ import "graph.js" as GraphFunctions
 Screen {
     id: screen
     property alias functionString: rect.func
+
+    WorkerScript
+    {
+        id:test
+        source: "drawWorker.js"
+        onMessage: {
+            if(messageObject.end==false){
+            //console.log("add point(" + messageObject.i+","+messageObject.y+")");
+            diagonalLine.addPoint(messageObject.i,messageObject.y);
+                waitCircleText.text=messageObject.percent+"%"
+            }
+            else
+            {
+                waitCircle.visible=false
+                diagonalLine.updateCanvas()
+            }
+        }
+
+    }
+
     function show(functionString,frameLeft,frameRight,frameDown,frameUp,drawMinX,drawMaxX) {
+        waitCircle.visible=true;
         frameLeftActive=frameLeft
         frameRightActive=frameRight
         frameDownActive=frameDown
@@ -19,7 +40,12 @@ Screen {
         error.visible=false;
         diagonalLine.functionToDraw=functionString;
         diagonalLine.recalculateScales(rect.width,rect.height,frameLeft,frameRight,frameDown,frameUp); //prepare window
-        GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinX,drawMaxX); //count points
+        var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinX);
+        var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxX);
+        diagonalLine.clearCanvas();
+        test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
+
+        //GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinX,drawMaxX); //count points
         }
     property double frameLeftActive
     property double frameRightActive
@@ -27,6 +53,7 @@ Screen {
     property double frameUpActive
     property double drawMinXActive
     property double drawMaxXActive
+    property bool blockZoom: false
 
     Rectangle {
         id: prediction
@@ -76,6 +103,53 @@ Screen {
     }
 
     Rectangle{
+        id:waitCircle
+        anchors.centerIn: parent
+        width: parent.width/2
+        height: parent.height/2
+        Column{
+            width: parent.width
+            height: parent.height
+            Row{
+                Rectangle { width: waitCircle.width; height: waitCircle.height/3; color: "transparent"
+                    Text {anchors.centerIn: parent
+                        id: waitText
+                        text: qsTr("Proszę czekać...")
+                        font.pixelSize: waitCircle.height*0.1
+                    }
+
+            }
+            }
+            Row{
+                Rectangle { width: waitCircle.width; height: waitCircle.height/3; color: "transparent"
+                    Text {anchors.centerIn: parent
+                        id: waitCircleText
+                        text: qsTr("0%")
+                        font.pixelSize: waitCircle.height*0.1
+                    }
+
+            }
+            }
+            Row{
+                Rectangle { width: waitCircle.width; height: waitCircle.height/3; color: "transparent"
+                    AnimatedImage {
+                            source: "images/busy.gif"
+                            anchors.centerIn: parent
+                        }
+            }
+            }
+        }
+
+
+
+        color: "white"
+        radius: 5;
+        visible:false
+
+        onVisibleChanged: {waitCircleText.text="0%"}
+    }
+
+    Rectangle{
         id:error
         anchors.centerIn: parent
         width: parent.width/2
@@ -92,11 +166,12 @@ Screen {
 
 
     }
+
     Rectangle{
         id:zoomContainer
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        width: parent.width/3
+        width: parent.width/5
         height: parent.height/4
         color: "transparent"
     Rectangle{
@@ -128,11 +203,20 @@ Screen {
                         MouseArea{
                             anchors.fill: parent
                             onClicked: {
+                                if(blockZoom==false){
+                                    blockZoom=true;
                                 frameLeftActive/=2.0
                                 frameRightActive/=2.0
                                 diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
-                                GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinXActive,drawMaxXActive);
-                            }
+                                waitCircle.visible=true;
+                                var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinXActive);
+                                var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxXActive);
+                                diagonalLine.clearCanvas();
+                                test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
+                                    blockZoom=false;
+                                }
+
+                                }
                         }}
                         Rectangle { width: zoom.ew; height: zoom.eh; border.color: "black";  color: "steelblue"; radius: 5
                             Text {anchors.centerIn: parent
@@ -142,11 +226,19 @@ Screen {
                             MouseArea{
                                 anchors.fill: parent
                                 onClicked: {
+                                    if(blockZoom==false){
+                                        blockZoom=true;
                                     frameUpActive/=2.0
                                     frameDownActive/=2.0
                                     diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
-                                    GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinXActive,drawMaxXActive);
-                                }
+                                    waitCircle.visible=true;
+                                    var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinXActive);
+                                    var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxXActive);
+                                    diagonalLine.clearCanvas();
+                                    test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
+                                        blockZoom=false;
+                                    }
+                                    }
                             }}
 
                       }
@@ -175,10 +267,18 @@ Screen {
                             MouseArea{
                                 anchors.fill: parent
                                 onClicked: {
+                                    if(blockZoom==false){
+                                        blockZoom=true;
                                     frameLeftActive*=2.0
                                     frameRightActive*=2.0
                                     diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
-                                    GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinXActive,drawMaxXActive);
+                                    waitCircle.visible=true;
+                                    var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinXActive);
+                                    var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxXActive);
+                                    diagonalLine.clearCanvas();
+                                    test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
+                                        blockZoom=false;
+                                    }
                                 }
                             }}
                         Rectangle { width: zoom.ew; height: zoom.eh; border.color: "black";  color: "steelblue"; radius: 5
@@ -189,11 +289,19 @@ Screen {
                             MouseArea{
                                 anchors.fill: parent
                                 onClicked: {
+                                    if(blockZoom==false){
+                                        blockZoom=true;
                                     frameUpActive*=2.0
                                     frameDownActive*=2.0
                                     diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
-                                    GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinXActive,drawMaxXActive);
-                                }
+                                    waitCircle.visible=true;
+                                    var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinXActive);
+                                    var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxXActive);
+                                    diagonalLine.clearCanvas();
+                                    test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
+                                        blockZoom=false;
+                                    }
+                                                                    }
                             }}
                 }
         }
