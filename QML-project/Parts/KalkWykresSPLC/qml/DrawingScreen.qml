@@ -15,6 +15,12 @@ Screen {
         id:test
         source: "drawWorker.js"
         onMessage: {
+            if(messageObject.error==true)
+            {
+                waitCircle.visible=false
+                errorRect.visible=true;
+            }
+
             if(messageObject.end==false){
             //console.log("add point(" + messageObject.i+","+messageObject.y+")");
             diagonalLine.addPoint(messageObject.i,messageObject.y);
@@ -37,12 +43,11 @@ Screen {
         frameUpActive=frameUp
         drawMinXActive=drawMinX
         drawMaxXActive=drawMaxX
-        error.visible=false;
+        errorRect.visible=false;
         diagonalLine.functionToDraw=functionString;
         diagonalLine.recalculateScales(rect.width,rect.height,frameLeft,frameRight,frameDown,frameUp); //prepare window
         var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinX);
         var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxX);
-        diagonalLine.clearCanvas();
         test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
 
         //GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinX,drawMaxX); //count points
@@ -150,7 +155,7 @@ Screen {
     }
 
     Rectangle{
-        id:error
+        id:errorRect
         anchors.centerIn: parent
         width: parent.width/2
         height: parent.height/2

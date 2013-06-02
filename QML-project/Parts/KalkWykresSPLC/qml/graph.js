@@ -53,7 +53,7 @@ function testDrawSin()
 }
 
 
-function drawGraph(functionToDraw,minXtoCount,maxXtoCount) {
+/*function drawGraph(functionToDraw,minXtoCount,maxXtoCount) {
     var entryPixelLeftX=diagonalLine.axisSizeToPixelX(minXtoCount);
     var endPixelRightX=diagonalLine.axisSizeToPixelX(maxXtoCount);
     diagonalLine.clearCanvas();
@@ -78,3 +78,4 @@ console.log(">>>>>>>>>>>>>>>>>axisSizeToPixelY(1.0):",diagonalLine.axisSizeToPix
         //console.log("add point result:"+result+" x:"+x+" y:"+y)
     }
 }
+*/

@@ -39,7 +39,6 @@ function pow(x,y)
 }
 
 WorkerScript.onMessage = function(message) {
-    console.log(">>>>>>>>>>>>>>>>>ay:",message.ay)
     var progress=0;
     var maxprogress=message.max-message.min;
     for(var i=message.min;i<message.max;++i)
@@ -56,6 +55,7 @@ WorkerScript.onMessage = function(message) {
         catch(err)
           {
             WorkerScript.sendMessage({ i: i,y: i,error:true,end:false,percent:-1})
+            return;
           }
 
         var y=message.ay*result;

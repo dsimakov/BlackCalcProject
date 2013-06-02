@@ -149,7 +149,8 @@ OTHER_FILES += \
     android/res/drawable-mdpi/icon.png \
     android/res/drawable-ldpi/icon.png \
     android/res/values/libs.xml \
-    android/AndroidManifest.xml
+    android/AndroidManifest.xml \
+    qml/StartRangeChooser.qml
 
 HEADERS += \
     qmlCanvas.h

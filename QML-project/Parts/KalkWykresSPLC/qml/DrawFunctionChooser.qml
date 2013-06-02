@@ -6,8 +6,10 @@ import QtQuick 1.0
  */
 Item {
     id: item
+    property double minXGraph
+    property double maxXGraph
 
-    property alias backgroundcolor: textboxrectangle.color
+    property alias backgroundcolor: setbox.color
     property alias functions: functionText.text
     signal buttonClicked(string funcText)
 
@@ -17,8 +19,7 @@ Item {
     }
 
     width: screen.width
-    height: screen.height/2
-    anchors.top: parent.top;
+    height: screen.height
 
 
     // Normal state button gradient
@@ -36,6 +37,7 @@ Item {
         GradientStop { position: 0.7; color: "#2463DE" }
         GradientStop { position: 1.0; color: "#2463DE" }
     }
+    //shadow
     Rectangle{
         color: "grey";
         width: screen.width
@@ -46,12 +48,13 @@ Item {
 
     // Text box
     Rectangle {
-        anchors.centerIn: parent
-        id: textboxrectangle
+        anchors.horizontalCenter:parent.horizontalCenter
+        y: parent.height / 11
+        //anchors.centerIn: parent
+        id: setbox
         width: parent.width*0.9
         height: parent.height*0.4
         radius: 5
-
         property int ew: (width-60)/5
         property int ewtext: ((width-60)/5)+0.5*ew+5//5->spacing
         property int eh: (height-30)/2
@@ -62,7 +65,7 @@ Item {
                 x: 10; y: 10
                 spacing: 10
                 Row {
-                    Rectangle { width: textboxrectangle.ew*5+40; height: textboxrectangle.eh/2-5; color: "blue"
+                    Rectangle { width: setbox.ew*5+40; height: setbox.eh/2-5; color: "transparent"
                         Text {
                             id: frameText
                             text: qsTr("Ustawianie rysowanej funkcji")
@@ -74,20 +77,21 @@ Item {
                 Row { /* inner row */
                         spacing: 10
 
-                        Rectangle { width: textboxrectangle.ew*5+40; height: textboxrectangle.eh; color: textboxrectangle.color
+
+                        Rectangle { width: setbox.ew*5+40; height: setbox.eh; color: "lightgrey"
                             TextInput{
-                                anchors.centerIn: parent
                                 id:functionText
+                                anchors.centerIn: parent
                                 width: parent.width
                                 height: parent.height*0.5
                                 focus: true
                                 font.pixelSize: parent.height*0.4
 
-                            }}
-
+                            }
+                        }
                       }
                 Row {
-                    Rectangle {id:acceptRangeRect; width: textboxrectangle.ew*5+40; height: textboxrectangle.eh/2-5; color: "steelblue"
+                    Rectangle {id:acceptRangeRect; width: setbox.ew*5+40; height: setbox.eh/2-5; color: "steelblue"
                         Text {
                             id: acceptText
                             text: qsTr("OK")
@@ -114,3 +118,4 @@ Item {
          }
     }
 }
+

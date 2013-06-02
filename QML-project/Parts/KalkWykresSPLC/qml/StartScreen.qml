@@ -111,7 +111,7 @@ Screen {
                                                         }
                                                         onPressed: {
                                                             if(flickArea.interactive==true)
-                                                            clickAnimation1.start()
+                                                            clickAnimation2.start()
                                                         }
                                                     }
                                                 }
@@ -147,7 +147,7 @@ Screen {
                                                         onClicked: {
                                                             if(flickArea.interactive==true){
                                                                 flickArea.interactive=false;
-                                                                rangePanel.showRangeChooserPanel()
+                                                                graphRangePanel.showRangeChooserPanel()
                                                             }
                                                         }
                                                         onPressed: {
@@ -228,7 +228,13 @@ Screen {
     PropertyAnimation {target: setRangeButton; properties: "color"; to: "white"; duration: 1500}
   }
 
-  FunctionPanel{
+  SequentialAnimation{
+      id: clickAnimation2
+      PropertyAnimation {target: setFrameButton; properties: "color"; to: "steelblue"; duration: 100}
+    PropertyAnimation {target: setFrameButton; properties: "color"; to: "white"; duration: 1500}
+  }
+
+  DrawFunctionChooser{
       id: funcPanel
       backgroundcolor: "#b7c4c8"
       visible: false
@@ -238,8 +244,18 @@ Screen {
   }
 }
 
-  RangeChooser{
+StartRangeChooser{
       id: rangePanel
+      backgroundcolor: "#b7c4c8"
+      visible: false
+      onButtonClicked: {
+
+          flickArea.interactive=true
+  }
+}
+
+GraphRangeChooser{
+      id: graphRangePanel
       backgroundcolor: "#b7c4c8"
       visible: false
       onButtonClicked: {

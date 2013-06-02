@@ -78,7 +78,7 @@ public:
         QFont font=painter->font() ;
         font.setPointSize ( 10 );
         painter->setFont(font);
-
+        painter->eraseRect(0,0,width,height);
 
         int leftXtoPixel=axisSizeToPixelX(QmlCanvas::leftX);
         int downYtoPixel=axisSizeToPixelY(QmlCanvas::downY);
@@ -187,6 +187,7 @@ public:
         QmlCanvas::width=objectWidth;
         QmlCanvas::height=objectHeight;
         //std::cout<<"ranges: l:"<<QmlCanvas::leftX<<",r:"<<QmlCanvas::rightX<<",d:"<<QmlCanvas::downY<<",u:"<<QmlCanvas::upY<<std::endl;
+        QmlCanvas::pointsArray.clear();
 
         //SKALOWANIE DLA X
         /*jeśli różne znaki*/
