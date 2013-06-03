@@ -196,7 +196,7 @@ Screen {
                                    anchors.fill: parent
                                    onClicked: {
                                        if(flickArea.interactive==true){
-                                           wait.visible=true;
+                                           draw()
                                        }
                                    }
                                    onPressed: {
@@ -357,7 +357,6 @@ GraphRangeChooser{
 
 
         }
-            wait.visible=false;
     }
 
 

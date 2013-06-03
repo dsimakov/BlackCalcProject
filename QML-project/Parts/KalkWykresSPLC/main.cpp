@@ -7,7 +7,9 @@
 #include <QPoint>
 #include "qmlCanvas.h"
 
-QList<QPoint> QmlCanvas::pointsArray;
+QmlCanvas::node* QmlCanvas::frameArray;
+QmlCanvas::node* QmlCanvas::frameArrayFirstElement;
+QmlCanvas::node* QmlCanvas::frameArrayLastElement;
 
 long double QmlCanvas::leftX;
 long double QmlCanvas::rightX;
@@ -22,7 +24,6 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QmlCanvas::pointsArray.clear();
     qmlRegisterType<QmlCanvas>("QmlCanvas", 1, 0, "QmlCanvas");
 
     QmlApplicationViewer viewer;

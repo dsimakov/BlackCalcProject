@@ -35,8 +35,10 @@ Screen {
 
     }
 
+
+
     function show(functionString,frameLeft,frameRight,frameDown,frameUp,drawMinX,drawMaxX) {
-        waitCircle.visible=true;
+        //waitCircle.visible=true;
         frameLeftActive=frameLeft
         frameRightActive=frameRight
         frameDownActive=frameDown
@@ -48,7 +50,13 @@ Screen {
         diagonalLine.recalculateScales(rect.width,rect.height,frameLeft,frameRight,frameDown,frameUp); //prepare window
         var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinX);
         var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxX);
-        test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
+        diagonalLine.initFrameArray(rect.width);
+        GraphFunctions.prepareFrameList(rect.width,diagonalLine.functionToDraw);
+        //diagonalLine.drawFrameList(rect.width)
+       /* diagonalLine.drawFrameList(rect.width);
+        diagonalLine.addRightPoint(666);
+        diagonalLine.drawFrameList(rect.width);*/
+        //test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
 
         //GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinX,drawMaxX); //count points
         }
@@ -95,9 +103,42 @@ Screen {
                 onMousePositionChanged: {
                     var deltaX=0
                     var deltaY=0
-                    deltaX=drawArea.xmouse-mouseX
+                    //deltaX=drawArea.xmouse-mouseX
+                    if(mouseX<drawArea.xmouse)
+                    {
+                        deltaX=1
+                    }
+                    else if(mouseX>drawArea.xmouse)
+                    {
+                        deltaX=-1
+                    }
+
                     deltaY=drawArea.ymouse-mouseY
                     diagonalLine.moveFrameByPixels(deltaX,deltaY);
+
+                    //liczenie nowych pozycji ramki
+                    var i;
+                    if(deltaX>0)//przesuniecie w lewo
+                    {//dodajemy pkty z prawej strony
+                        var right=diagonalLine.axisSizeToPixelX(diagonalLine.getRightX())
+                        for(i=0;i<deltaX;++i)
+                        {
+                            diagonalLine.addRightPoint(GraphFunctions.recalc(diagonalLine.functionToDraw,right))
+                            right++;
+                        }
+                    }
+                    else if(deltaX<0)//przesunięcie w prawo
+                    {//dodajemy pkty z lewej strony
+                        var left=diagonalLine.axisSizeToPixelX(diagonalLine.getLeftX())
+                        for(i=0;i<-deltaX;++i)
+                        {
+                            diagonalLine.addLeftPoint(GraphFunctions.recalc(diagonalLine.functionToDraw,left))
+                            left--;
+                        }
+
+                    }
+                    //diagonalLine.drawFrameList(width)
+
                     drawArea.xmouse=mouseX
                     drawArea.ymouse=mouseY
 
@@ -213,12 +254,9 @@ Screen {
                                 frameLeftActive/=2.0
                                 frameRightActive/=2.0
                                 diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
-                                waitCircle.visible=true;
-                                var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinXActive);
-                                var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxXActive);
-                                diagonalLine.clearCanvas();
-                                test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
+                                GraphFunctions.prepareFrameList(rect.width,diagonalLine.functionToDraw);
                                     blockZoom=false;
+
                                 }
 
                                 }
@@ -236,11 +274,7 @@ Screen {
                                     frameUpActive/=2.0
                                     frameDownActive/=2.0
                                     diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
-                                    waitCircle.visible=true;
-                                    var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinXActive);
-                                    var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxXActive);
-                                    diagonalLine.clearCanvas();
-                                    test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
+                                    GraphFunctions.prepareFrameList(rect.width,diagonalLine.functionToDraw);
                                         blockZoom=false;
                                     }
                                     }
@@ -277,11 +311,7 @@ Screen {
                                     frameLeftActive*=2.0
                                     frameRightActive*=2.0
                                     diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
-                                    waitCircle.visible=true;
-                                    var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinXActive);
-                                    var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxXActive);
-                                    diagonalLine.clearCanvas();
-                                    test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
+                                    GraphFunctions.prepareFrameList(rect.width,diagonalLine.functionToDraw);
                                         blockZoom=false;
                                     }
                                 }
@@ -299,13 +329,9 @@ Screen {
                                     frameUpActive*=2.0
                                     frameDownActive*=2.0
                                     diagonalLine.recalculateScales(rect.width,rect.height,frameLeftActive,frameRightActive,frameDownActive,frameUpActive);
-                                    waitCircle.visible=true;
-                                    var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinXActive);
-                                    var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxXActive);
-                                    diagonalLine.clearCanvas();
-                                    test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
-                                        blockZoom=false;
-                                    }
+                                    GraphFunctions.prepareFrameList(rect.width,diagonalLine.functionToDraw);
+
+                                    blockZoom=false;}
                                                                     }
                             }}
                 }

@@ -14,12 +14,77 @@ class QmlCanvas : public QDeclarativeItem
     //Q_PROPERTY(QColor color READ color)
 
 public:
-    static QList<QPoint> pointsArray;
+    typedef struct Node
+    {
+            int x;
+            int y;
+            struct Node *next;
+            struct Node *previous;
+    }node;
 
-    Q_INVOKABLE int addPoint(int x, int y) {
-        QmlCanvas::pointsArray.append(QPoint(x,y));
-        return 0;
+    /*FrameArray methods*/
+    static node* frameArray;
+    static node* frameArrayFirstElement;
+    static node* frameArrayLastElement;
+
+    Q_INVOKABLE void initFrameArray(int elementsCount) {
+        QmlCanvas::frameArray=(node *)malloc(sizeof(node));
+        node *temp1=QmlCanvas::frameArray;
+        temp1->y=0;
+
+        /*init circular list*/
+        node *temp2;
+        for(int i=0;i<elementsCount-1;++i)
+        {
+            temp2=(node *)malloc(sizeof(node));
+            temp2->y=i+1;
+            temp1->next=temp2;
+            temp2->previous=temp1;
+            temp1=temp2;
+        }
+        //last element with first
+        temp2->next=QmlCanvas::frameArray;
+
+
+        QmlCanvas::frameArrayFirstElement=frameArray;
+        QmlCanvas::frameArrayLastElement=temp2;
+        QmlCanvas::frameArrayFirstElement->previous=QmlCanvas::frameArrayLastElement;
+
+    }
+
+    Q_INVOKABLE void drawFrameList(int elementsCount) {
+        node *temp1;
+        std::cout<<"forward check"<<std::endl;
+                temp1=QmlCanvas::frameArrayFirstElement;
+                for(int i=0;i<elementsCount+2;++i)
+                {
+                    std::cout<<"i:"<<i<<" y:"<<temp1->y<<std::endl;
+                    temp1=temp1->next;
+                }
          }
+
+    Q_INVOKABLE void addLeftPoint(int newLeftValue) {
+            QmlCanvas::frameArrayLastElement=QmlCanvas::frameArrayLastElement->previous;
+            QmlCanvas::frameArrayFirstElement=QmlCanvas::frameArrayLastElement->next;
+
+            QmlCanvas::frameArrayFirstElement->y=newLeftValue;
+         }
+
+    Q_INVOKABLE void addRightPoint(int newRightValue) {
+
+            QmlCanvas::frameArrayFirstElement=QmlCanvas::frameArrayFirstElement->next;
+            QmlCanvas::frameArrayLastElement=QmlCanvas::frameArrayFirstElement->previous;
+
+            QmlCanvas::frameArrayLastElement->y=newRightValue;
+         }
+
+    Q_INVOKABLE double getLeftX() {
+        return QmlCanvas::leftX;
+         }
+    Q_INVOKABLE double getRightX() {
+        return QmlCanvas::rightX;
+         }
+
 
     Q_INVOKABLE void updateCanvas() {
         update();
@@ -46,11 +111,6 @@ public:
     }
 
     // Get methods
-
-    Q_INVOKABLE void clearCanvas() {
-        QmlCanvas::pointsArray.clear();
-        return;
-         }
 
     Q_INVOKABLE void configureCanvas() {
         antialiasing=true;
@@ -102,6 +162,8 @@ public:
                 painter->drawLine(0,(YPixels)-i,width,(YPixels)-i);
             }
         }
+        node *temp1;
+        temp1=QmlCanvas::frameArrayFirstElement;
         for(int i=0;i<width-1;++i)
         {
             //rysowanie osi Y
@@ -111,7 +173,6 @@ public:
                 painter->drawLine(i,0,i,height);
                 painter->setPen(penHelpAxisText);
                 drawRotatedText(painter,90,i,height-(height/9),QString::number(pixelToAxisSizeX(leftXtoPixel),'g',3));
-                //painter->drawText(i-20,height-(height/30),QString::number(pixelToAxisSizeX(leftXtoPixel),'g',3));
             }
             if(leftXtoPixel==0)
             {
@@ -120,21 +181,11 @@ public:
             }
             leftXtoPixel++;
 
-            if(QmlCanvas::pointsArray.count()>0){
-            //obliczanie punktów, sprawdzanei warunków
-            int delta;
-            delta=axisSizeToPixelX(QmlCanvas::leftX)-QmlCanvas::pointsArray[0].x();
-            if(delta+i>QmlCanvas::pointsArray.count()-2)
-                continue;
-            if(delta+i<0)
-                continue;
-
-            y1=QmlCanvas::pointsArray[delta+i].y();
-            y2=QmlCanvas::pointsArray[delta+i+1].y();
-
-            //rysowanie jeśli można (jakieś ify i takie tam)
+            y1=temp1->y;
+            temp1=temp1->next;
+            y2=temp1->y;
             painter->setPen(penFunction);
-            painter->drawLine(i,(YPixels)-y1,i+1,(YPixels)-y2);}
+            painter->drawLine(i,(YPixels)-y1,i+1,(YPixels)-y2);
         }
     }
 
@@ -144,7 +195,7 @@ public:
         QmlCanvas::rightX+=pixelToAxisSizeX(deltaX)*xMoveMultiplier;
         QmlCanvas::downY-=pixelToAxisSizeY(deltaY)*yMoveMultiplier;
         QmlCanvas::upY-=pixelToAxisSizeY(deltaY)*yMoveMultiplier;
-        std::cout<<"new renges: l:"<<QmlCanvas::leftX<<",r:"<<QmlCanvas::rightX<<",d:"<<QmlCanvas::downY<<",u:"<<QmlCanvas::upY<<std::endl;
+        //std::cout<<"new ranges: l:"<<QmlCanvas::leftX<<",r:"<<QmlCanvas::rightX<<",d:"<<QmlCanvas::downY<<",u:"<<QmlCanvas::upY<<std::endl;
         update();
 
     }
@@ -187,7 +238,6 @@ public:
         QmlCanvas::width=objectWidth;
         QmlCanvas::height=objectHeight;
         //std::cout<<"ranges: l:"<<QmlCanvas::leftX<<",r:"<<QmlCanvas::rightX<<",d:"<<QmlCanvas::downY<<",u:"<<QmlCanvas::upY<<std::endl;
-        QmlCanvas::pointsArray.clear();
 
         //SKALOWANIE DLA X
         /*jeśli różne znaki*/
