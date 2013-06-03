@@ -71,17 +71,12 @@ OTHER_FILES += \
     android/AndroidManifest.xml \
     android/version.xml \
     Error.qml \
-    qml/Extraoptions.qml \
-    qml/ExtraOptionsModel.qml \
     qml/Screen.qml \
     qml/ScrollBar.qml \
     qml/BackButton.qml \
     qml/TopBar.qml \
-    qml/Extraoptions.qml \
-    qml/ExtraOptionsModel.qml \
     qml/main.qml \
     qml/OptionsList/OptionsScreenItem.qml \
-    qml/ChangeGradePanel.qml \
     qml/DrawingScreen.qml \
     qml/StartScreen.qml \
     android/src/org/kde/necessitas/origo/QtActivity.java \

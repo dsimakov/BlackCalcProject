@@ -10,62 +10,21 @@ Screen {
     id: screen
     property alias functionString: rect.func
 
-    WorkerScript
-    {
-        id:test
-        source: "drawWorker.js"
-        onMessage: {
-            if(messageObject.error==true)
-            {
-                waitCircle.visible=false
-                errorRect.visible=true;
-            }
-
-            if(messageObject.end==false){
-            //console.log("add point(" + messageObject.i+","+messageObject.y+")");
-            diagonalLine.addPoint(messageObject.i,messageObject.y);
-                waitCircleText.text=messageObject.percent+"%"
-            }
-            else
-            {
-                waitCircle.visible=false
-                diagonalLine.updateCanvas()
-            }
-        }
-
-    }
-
-
-
-    function show(functionString,frameLeft,frameRight,frameDown,frameUp,drawMinX,drawMaxX) {
-        //waitCircle.visible=true;
+    function show(functionString,frameLeft,frameRight,frameDown,frameUp) {
         frameLeftActive=frameLeft
         frameRightActive=frameRight
         frameDownActive=frameDown
         frameUpActive=frameUp
-        drawMinXActive=drawMinX
-        drawMaxXActive=drawMaxX
         errorRect.visible=false;
         diagonalLine.functionToDraw=functionString;
         diagonalLine.recalculateScales(rect.width,rect.height,frameLeft,frameRight,frameDown,frameUp); //prepare window
-        var entryPixelLeftX=diagonalLine.axisSizeToPixelX(drawMinX);
-        var endPixelRightX=diagonalLine.axisSizeToPixelX(drawMaxX);
         diagonalLine.initFrameArray(rect.width);
         GraphFunctions.prepareFrameList(rect.width,diagonalLine.functionToDraw);
-        //diagonalLine.drawFrameList(rect.width)
-       /* diagonalLine.drawFrameList(rect.width);
-        diagonalLine.addRightPoint(666);
-        diagonalLine.drawFrameList(rect.width);*/
-        //test.sendMessage({functionToDraw:diagonalLine.functionToDraw,min:entryPixelLeftX,max:endPixelRightX,ax:diagonalLine.pixelToAxisSizeX(1), ay:diagonalLine.axisSizeToPixelY2(1.0)})
-
-        //GraphFunctions.drawGraph(diagonalLine.functionToDraw,drawMinX,drawMaxX); //count points
         }
     property double frameLeftActive
     property double frameRightActive
     property double frameDownActive
     property double frameUpActive
-    property double drawMinXActive
-    property double drawMaxXActive
     property bool blockZoom: false
 
     Rectangle {
@@ -103,16 +62,7 @@ Screen {
                 onMousePositionChanged: {
                     var deltaX=0
                     var deltaY=0
-                    //deltaX=drawArea.xmouse-mouseX
-                    if(mouseX<drawArea.xmouse)
-                    {
-                        deltaX=1
-                    }
-                    else if(mouseX>drawArea.xmouse)
-                    {
-                        deltaX=-1
-                    }
-
+                    deltaX=drawArea.xmouse-mouseX
                     deltaY=drawArea.ymouse-mouseY
                     diagonalLine.moveFrameByPixels(deltaX,deltaY);
 
@@ -120,22 +70,22 @@ Screen {
                     var i;
                     if(deltaX>0)//przesuniecie w lewo
                     {//dodajemy pkty z prawej strony
-                        var right=diagonalLine.axisSizeToPixelX(diagonalLine.getRightX())
+                        var right=diagonalLine.axisSizeToPixelX(diagonalLine.getRightX())-deltaX
                         for(i=0;i<deltaX;++i)
                         {
+
                             diagonalLine.addRightPoint(GraphFunctions.recalc(diagonalLine.functionToDraw,right))
                             right++;
                         }
                     }
                     else if(deltaX<0)//przesunięcie w prawo
                     {//dodajemy pkty z lewej strony
-                        var left=diagonalLine.axisSizeToPixelX(diagonalLine.getLeftX())
+                        var left=diagonalLine.axisSizeToPixelX(diagonalLine.getLeftX())-deltaX
                         for(i=0;i<-deltaX;++i)
                         {
                             diagonalLine.addLeftPoint(GraphFunctions.recalc(diagonalLine.functionToDraw,left))
                             left--;
                         }
-
                     }
                     //diagonalLine.drawFrameList(width)
 
@@ -146,53 +96,6 @@ Screen {
                 }
             }
         }
-    }
-
-    Rectangle{
-        id:waitCircle
-        anchors.centerIn: parent
-        width: parent.width/2
-        height: parent.height/2
-        Column{
-            width: parent.width
-            height: parent.height
-            Row{
-                Rectangle { width: waitCircle.width; height: waitCircle.height/3; color: "transparent"
-                    Text {anchors.centerIn: parent
-                        id: waitText
-                        text: qsTr("Proszę czekać...")
-                        font.pixelSize: waitCircle.height*0.1
-                    }
-
-            }
-            }
-            Row{
-                Rectangle { width: waitCircle.width; height: waitCircle.height/3; color: "transparent"
-                    Text {anchors.centerIn: parent
-                        id: waitCircleText
-                        text: qsTr("0%")
-                        font.pixelSize: waitCircle.height*0.1
-                    }
-
-            }
-            }
-            Row{
-                Rectangle { width: waitCircle.width; height: waitCircle.height/3; color: "transparent"
-                    AnimatedImage {
-                            source: "images/busy.gif"
-                            anchors.centerIn: parent
-                        }
-            }
-            }
-        }
-
-
-
-        color: "white"
-        radius: 5;
-        visible:false
-
-        onVisibleChanged: {waitCircleText.text="0%"}
     }
 
     Rectangle{

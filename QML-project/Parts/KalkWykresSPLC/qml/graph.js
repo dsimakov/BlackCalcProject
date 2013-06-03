@@ -55,7 +55,7 @@ function testDrawSin()
 
 function prepareFrameList(elementsCount,functionToDraw)
 {
-    console.log(functionToDraw)
+    //console.log(functionToDraw)
     var entryPixelLeftX=diagonalLine.axisSizeToPixelX(diagonalLine.getLeftX());
     //diagonalLine.clearCanvas();
     var i=entryPixelLeftX
@@ -77,7 +77,7 @@ function prepareFrameList(elementsCount,functionToDraw)
           }
         var y=diagonalLine.axisSizeToPixelY(result);
         diagonalLine.addRightPoint(y)
-        console.log("add point result:"+result+" x:"+x+" y:"+y)
+        //console.log("add point result:"+result+" x:"+x+" y:"+y)
         i++;
     }
     diagonalLine.updateCanvas()
@@ -92,6 +92,6 @@ function recalc(functionToDraw,i)
     var result=eval(functionToDraw);
 
     var y=diagonalLine.axisSizeToPixelY(result);
-    console.log("add point result:"+result+" x:"+x+" y:"+y+" i:"+i)
+    //console.log("add point result:"+result+" x:"+x+" y:"+y+" i:"+i)
     return y;
 }

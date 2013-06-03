@@ -6,18 +6,23 @@ import QtQuick 1.0
  */
 Item {
     id: item
-    property real leftFrame
-    property real rightFrame
-    property real downFrame
-    property real upFrame
-    property real minXGraph
-    property real maxXGraph
 
     property alias backgroundcolor: setbox.color
-    signal buttonClicked()
+    signal buttonClicked(double l, double r, double d,double u)
 
-    function showRangeChooserPanel()
+    function showRangeChooserPanel(l, r, d, u)
     {
+        leftText.text=l
+        rightText.text=r
+        downText.text=d
+        upText.text=u
+
+       /* leftText.text.replace(",",".")
+        rightText.text.replace(",",".")
+        downText.text.replace(",",".")
+        upText.text.replace(",",".")*/
+
+
         visible=true;
     }
 
@@ -183,13 +188,80 @@ Item {
                                 acceptRangeRect.color="steelblue"
                             }
                             onClicked: {
-                                item.visible=false;
-                                buttonClicked()
+                                if(parseFloat(upText.text)>parseFloat(downText.text)){
+                                    if(parseFloat(rightText.text)>parseFloat(leftText.text)){
+                                        buttonClicked(parseFloat(leftText.text.replace(",",".")),parseFloat(rightText.text.replace(",",".")),parseFloat(downText.text.replace(",",".")),parseFloat(upText.text.replace(",",".")))
+                                        item.visible=false;
+                                    }
+                                    else{
+                                        errorRangeText.text="prawo<lewo"
+                                        errorRange.visible=true
+                                    }
+                                }
+                                else{
+                                    errorRangeText.text="góra<dół"
+                                    errorRange.visible=true
+                                }
+
+
+
                             }
                         }
                     }
                 }
               }
     }
+
+    Rectangle{
+            id:errorRange
+            anchors.centerIn: parent
+            width: parent.width/2
+            height: parent.height/2
+            Column{
+                width: parent.width
+                height: parent.height
+                Row{
+                    Rectangle { width: errorRange.width; height: errorRange.height/3; color: "transparent"
+                        Text {anchors.centerIn: parent
+                            id: waitText
+                            text: qsTr("Błędnie podany rozmiar")
+                            font.pixelSize: errorRange.height*0.1
+                        }
+
+                }
+                }
+                Row{
+                    Rectangle { width: errorRange.width; height: errorRange.height/3; color: "transparent"
+                        Text {anchors.centerIn: parent
+                            id: errorRangeText
+                            text: qsTr("")
+                            font.pixelSize: errorRange.height*0.1
+                        }
+
+                }
+                }
+                Row{
+                    Rectangle { width: errorRange.width; height: errorRange.height/3; color: "steelblue"
+                        Text {anchors.centerIn: parent
+                            text: qsTr("OK")
+                            font.pixelSize: errorRange.height*0.1
+                        }
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                errorRange.visible=false
+                            }
+                        }
+                }
+                }
+            }
+
+
+
+            color: "white"
+            radius: 5;
+            visible:false
+
+        }
 }
 

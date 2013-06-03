@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationLockLandscape);
     viewer.setResizeMode(QmlApplicationViewer::SizeRootObjectToView);
     viewer.setMainQmlFile(QLatin1String("qml/main.qml"));
-    //viewer.setWindowState(Qt::WindowFullScreen);
+    viewer.setWindowState(Qt::WindowFullScreen);
     viewer.showExpanded();
 
     return app.exec();

@@ -106,7 +106,7 @@ Screen {
                                                         onClicked: {
                                                             if(flickArea.interactive==true){
                                                                 flickArea.interactive=false;
-                                                                rangePanel.showRangeChooserPanel()
+                                                                rangePanel.showRangeChooserPanel(setFrameButton.leftFrame,setFrameButton.rightFrame,setFrameButton.downFrame,setFrameButton.upFrame)
                                                             }
                                                         }
                                                         onPressed: {
@@ -116,51 +116,12 @@ Screen {
                                                     }
                                                 }
 
-                                          Rectangle {
-                                              anchors.top: setFrameButton.bottom
-                                                    id: setRangeButton
-                                                    width: parent.width
-                                                    height: main.height / 10
 
-                                                    property real minXGraph: -10
-                                                    property real maxXGraph: 10
-
-                                                    Text {
-                                                        text: "Ustaw warunki początkowe. Obecnie: zakres <"+parent.minXGraph+","+parent.maxXGraph+">"
-                                                        anchors {
-                                                            left: parent.left; leftMargin: 20
-                                                            verticalCenter: parent.verticalCenter
-                                                        }
-                                                        font.pixelSize: main.height / 10 / 3
-                                                        elide: Text.ElideRight
-                                                    }
-
-                                                    Rectangle {
-                                                        width: parent.width
-                                                        height: 1
-                                                        color: "#BBBBBB"
-                                                        anchors.bottom: parent.bottom
-                                                    }
-
-                                                    MouseArea {
-                                                        anchors.fill: parent
-                                                        onClicked: {
-                                                            if(flickArea.interactive==true){
-                                                                flickArea.interactive=false;
-                                                                graphRangePanel.showRangeChooserPanel()
-                                                            }
-                                                        }
-                                                        onPressed: {
-                                                            if(flickArea.interactive==true)
-                                                            clickAnimation1.start()
-                                                        }
-                                                    }
-                                                }
 
                                           //rysuj wykres
 
                      Rectangle {
-                         anchors.top: setRangeButton.bottom
+                         anchors.top: setFrameButton.bottom
                                id: drawButton
                                width: parent.width
                                height: main.height / 10
@@ -223,12 +184,6 @@ Screen {
     }
 
   SequentialAnimation{
-      id: clickAnimation1
-      PropertyAnimation {target: setRangeButton; properties: "color"; to: "steelblue"; duration: 100}
-    PropertyAnimation {target: setRangeButton; properties: "color"; to: "white"; duration: 1500}
-  }
-
-  SequentialAnimation{
       id: clickAnimation2
       PropertyAnimation {target: setFrameButton; properties: "color"; to: "steelblue"; duration: 100}
     PropertyAnimation {target: setFrameButton; properties: "color"; to: "white"; duration: 1500}
@@ -249,98 +204,13 @@ StartRangeChooser{
       backgroundcolor: "#b7c4c8"
       visible: false
       onButtonClicked: {
-
+setFrameButton.leftFrame=l
+setFrameButton.rightFrame=r
+setFrameButton.downFrame=d
+setFrameButton.upFrame=u
           flickArea.interactive=true
   }
 }
-
-GraphRangeChooser{
-      id: graphRangePanel
-      backgroundcolor: "#b7c4c8"
-      visible: false
-      onButtonClicked: {
-
-          flickArea.interactive=true
-  }
-}
-
-
-  Rectangle{
-      id:wait
-      anchors.centerIn: parent
-      width: parent.width/2
-      height: parent.height/2
-
-      property int ew: (width)/2
-      property int eh: (height)/4
-
-
-
-
-
-
-      Column { /* inner column */
-          width: parent.width
-          height: parent.height
-              Row { /* inner row */
-                      Rectangle { width: 2*wait.ew+10; height: wait.eh; color: "transparent"
-                          Text {anchors.centerIn: parent
-                              id: zoomText
-                              text: qsTr("To może zająć dużo czasu")
-                              font.pixelSize: parent.height*0.5
-                          }}
-
-                    }
-              Row { /* inner row */
-                      spacing:10
-                      Rectangle { id: drawOKButton; width: wait.ew; height: wait.eh; border.color: "black";  color: "steelblue"; radius: 5
-                          Text {
-                              id:executeButtonText
-                              anchors.centerIn: parent
-                              text: qsTr("Wykonaj")
-                              font.pixelSize: parent.height*0.5
-                          }
-                      MouseArea{
-                          anchors.fill: parent
-                          onPressed: {
-                              drawOKButton.color="grey"
-                          }
-
-                          onReleased: {
-                              drawOKButton.color="steelblue"
-                          }
-
-                          onClicked: {
-                              draw()
-                          }
-                      }}
-                      Rectangle { id: drawCancelButton;width: wait.ew; height: wait.eh; border.color: "black";  color: "steelblue"; radius: 5
-                          Text {anchors.centerIn: parent
-                              text: qsTr("Anuluj")
-                              font.pixelSize: parent.height*0.5
-                          }
-                          MouseArea{
-                              anchors.fill: parent
-                              onPressed: {
-                                  drawCancelButton.color="grey"
-                              }
-
-                              onReleased: {
-                                  drawCancelButton.color="steelblue"
-                              }
-                              onClicked: {
-                                  wait.visible=false}
-                          }}
-
-                    }
-
-      }
-      color: "white"
-      radius: 5;
-      visible:false
-
-  }
-
 
 
     // Item clicked on the list.
@@ -352,7 +222,7 @@ GraphRangeChooser{
                 functionscreen.titleText = "Wykres"
                 functionscreen.previousScreen = screen
                 functionscreen.state = "visible"
-                functionscreen.show(setFunctionButton.functionToDraw,setFrameButton.leftFrame,setFrameButton.rightFrame,setFrameButton.downFrame,setFrameButton.upFrame,setRangeButton.minXGraph,setRangeButton.maxXGraph);
+                functionscreen.show(setFunctionButton.functionToDraw,setFrameButton.leftFrame,setFrameButton.rightFrame,setFrameButton.downFrame,setFrameButton.upFrame);
                 screen.state = "before"
 
 

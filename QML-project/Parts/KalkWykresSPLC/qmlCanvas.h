@@ -16,7 +16,6 @@ class QmlCanvas : public QDeclarativeItem
 public:
     typedef struct Node
     {
-            int x;
             int y;
             struct Node *next;
             struct Node *previous;
