@@ -150,4 +150,9 @@ OTHER_FILES += \
 HEADERS += \
     qmlCanvas.h
 
-RESOURCES +=
+RESOURCES += \
+    drawcalcres.qrc
+
+OTHER_FILES += bar-descriptor.xml
+
+CONFIG += cascades device

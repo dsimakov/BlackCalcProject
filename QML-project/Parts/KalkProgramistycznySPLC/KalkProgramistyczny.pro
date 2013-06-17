@@ -77,8 +77,10 @@ OTHER_FILES += \
     qml/OptionsList/OptionsScreenItem.qml \
     qml/Button.qml \
     qml/Display.qml \
-    qml/ProgCalcScreen.qml
+    qml/ProgCalcScreen.qml \
+    bar-descriptor.xml
 
 HEADERS +=
 
-RESOURCES +=
+RESOURCES += \
+    codecalcres.qrc

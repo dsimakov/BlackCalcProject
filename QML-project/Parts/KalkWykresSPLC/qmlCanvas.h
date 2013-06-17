@@ -135,7 +135,7 @@ public:
         QPen penHelpAxisText(Qt::black, 1);
         QPen penFunction(Qt::red, 2);
         QFont font=painter->font() ;
-        font.setPointSize ( 10 );
+        font.setPointSize ( 5 );
         painter->setFont(font);
         painter->eraseRect(0,0,width,height);
 

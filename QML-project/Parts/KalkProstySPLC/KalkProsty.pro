@@ -77,8 +77,10 @@ OTHER_FILES += \
     qml/main.qml \
     qml/Button.qml \
     qml/Display.qml \
-    qml/CalcScreen.qml
+    qml/CalcScreen.qml \
+    bar-descriptor.xml
 
 HEADERS +=
 
-RESOURCES +=
+RESOURCES += \
+    simplecalcres.qrc

@@ -535,7 +535,7 @@ color: "transparent"
                         left: parent.left; leftMargin: 20
                         verticalCenter: parent.verticalCenter
                     }
-                    font.pixelSize: parent.height / 3
+                    font.pixelSize: parent.height / 2
                     elide: Text.ElideRight
                 }
             }

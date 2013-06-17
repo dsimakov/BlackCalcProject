@@ -85,8 +85,10 @@ OTHER_FILES += \
     qml/PredictionScreen.qml \
     qml/OptionsScreen.qml \
     qml/OptionsList/OptionsScreenItem.qml \
-    qml/ChangeGradePanel.qml
+    qml/ChangeGradePanel.qml \
+    bar-descriptor.xml
 
 HEADERS +=
 
-RESOURCES +=
+RESOURCES += \
+    mgrcalcres.qrc

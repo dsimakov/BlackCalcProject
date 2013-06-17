@@ -1,6 +1,6 @@
 # Add more folders to ship with the application, here
 folder_01.source = qml
-folder_01.target =
+folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 
 # Additional import path used to resolve QML modules in Creator's code model
@@ -76,8 +76,10 @@ OTHER_FILES += \
     qml/TopBar.qml \
     qml/main.qml \
     qml/Display.qml \
-    qml/CalcScreen.qml
+    qml/CalcScreen.qml \
+    bar-descriptor.xml
 
 HEADERS +=
 
-RESOURCES +=
+RESOURCES += \
+    avgcalcres.qrc
