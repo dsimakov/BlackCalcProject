@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8' standalone='no'?>
 <qnx xmlns="http://www.qnx.com/schemas/application/1.0">
-    <id>com.cruztechnologies.KalkProgramistyczny</id>
-    <name>KalkProgramistyczny</name>
+    <id>com.cruztechnologies.KalkWykresu</id>
+    <name>KalkWykresu</name>
     <versionNumber>1.0.0</versionNumber>
     <description>DESCRIPTION</description>
     <initialWindow>
@@ -14,5 +14,5 @@
     <env var="QT_PLUGIN_PATH" value="app/native/plugins:/usr/lib/qt4/plugins"/>
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib/"/>
     <action system="true">run_native</action>
-    <asset type="Qnx/Elf" path="KalkProgramistyczny" entry="true">BBCodeCalc</asset>
+    <asset type="Qnx/Elf" path="KalkWykres" entry="true">KalkWykres</asset>
 </qnx>

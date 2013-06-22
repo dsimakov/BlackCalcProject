@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8' standalone='no'?>
 <qnx xmlns="http://www.qnx.com/schemas/application/1.0">
-    <id>com.cruztechnologies.KalkSredniej</id>
-    <name>KalkSredniej</name>
+    <id>com.cruztechnologies.KalkMgr</id>
+    <name>KalkMgr</name>
     <versionNumber>1.0.0</versionNumber>
     <description>DESCRIPTION</description>
     <initialWindow>
@@ -14,5 +14,5 @@
     <env var="QT_PLUGIN_PATH" value="app/native/plugins:/usr/lib/qt4/plugins"/>
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib/"/>
     <action system="true">run_native</action>
-    <asset type="Qnx/Elf" path="KalkSredniej" entry="true">BBAvgCalc</asset>
+    <asset type="Qnx/Elf" path="KalkMgr" entry="true">KalkMgr</asset>
 </qnx>
