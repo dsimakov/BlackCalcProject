@@ -60,11 +60,13 @@ Screen {
                                MouseArea {
                                    anchors.fill: parent
                                    onClicked: {
+                                       if(flickArea.interactive==true){
                                        changeGrade(parent)
-                                   }
+                                   }}
                                    onPressed: {
+                                       if(flickArea.interactive==true){
                                        clickAnimation0.start()
-                                   }
+                                   }}
                                }
                            }
 
@@ -99,10 +101,12 @@ Screen {
                                                     MouseArea {
                                                         anchors.fill: parent
                                                         onClicked: {
+                                                            if(flickArea.interactive==true){
                                                             changeGrade(parent)
-                                                        }
+                                                        }}
                                                         onPressed: {
-                                                            clickAnimation1.start()
+                                                            if(flickArea.interactive==true){
+                                                            clickAnimation1.start()}
                                                         }
                                                     }
                                                 }
@@ -136,14 +140,16 @@ Screen {
                                                     MouseArea {
                                                         anchors.fill: parent
                                                         onClicked: {
+                                                            if(flickArea.interactive==true){
                                                             if(setPresentationGradesButton.grade==0.0)
                                                                 setPresentationGradesButton.grade=3.0
                                                             else
                                                                 setPresentationGradesButton.grade=0.0
-                                                        }
+                                                        }}
                                                         onPressed: {
+                                                            if(flickArea.interactive==true){
                                                             clickAnimationEnablePresentation.start()
-                                                        }
+                                                        }}
                                                     }
                                                 }
                                                                Rectangle {
@@ -176,10 +182,12 @@ Screen {
                                                                          MouseArea {
                                                                              anchors.fill: parent
                                                                              onClicked: {
+                                                                                 if(flickArea.interactive==true){
                                                                                  changeGrade(parent)
-                                                                             }
+                                                                             }}
                                                                              onPressed: {
-                                                                                 clickAnimation2.start()
+                                                                                 if(flickArea.interactive==true){
+                                                                                 clickAnimation2.start()}
                                                                              }
                                                                          }
                                                                      }
@@ -219,10 +227,12 @@ Screen {
                                MouseArea {
                                    anchors.fill: parent
                                    onClicked: {
+                                       if(flickArea.interactive==true){
                                        itemSelected(setStudyGradesButton.grade,setWorkGradesButton.grade,setPresentationGradesButton.grade)
-                                   }
+                                   }}
                                    onPressed: {
-                                       clickAnimation.start()
+                                       if(flickArea.interactive==true){
+                                       clickAnimation.start()}
                                    }
                                }
                            }
@@ -358,7 +368,6 @@ Screen {
         var lsg = parseInt(changeGradePanel.mostSignificantGrade)
         var LSG = Math.round((changeGradePanel.grade-lsg)*100)
         changeGradePanel.leastSignificantGrade = LSG.toString()
-       // helpScreen.enabled=false
-
+        flickArea.interactive=false
     }
 }

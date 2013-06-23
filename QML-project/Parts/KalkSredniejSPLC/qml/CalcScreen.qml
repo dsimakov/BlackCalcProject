@@ -79,7 +79,7 @@ color: "transparent"
                                 anchors.fill: parent
                                 property int interval: 500
                                 onPressed: {
-                                    if(graderectangle.grade>3.0)
+                                    if(graderectangle.grade>0.0)
                                         graderectangle.grade-=0.5
                                     minusgradetimer.running=true
                                     parent.gradient = selected
@@ -93,7 +93,7 @@ color: "transparent"
                                     id:minusgradetimer
                                          interval: 500; running: false; repeat: true
                                          onTriggered: {
-                                             if(graderectangle.grade>3.0)
+                                             if(graderectangle.grade>0.0)
                                                  graderectangle.grade-=0.5
                                              if(interval>100)
                                                 interval*=0.8
@@ -155,7 +155,7 @@ color: "transparent"
                                 anchors.fill: parent
                                 property int interval: 500
                                 onPressed: {
-                                    if(graderectangle.grade<5.0)
+                                    if(graderectangle.grade<6.0)
                                         graderectangle.grade+=0.5
                                     plusgradetimer.running=true
                                     parent.gradient = selected
@@ -169,7 +169,7 @@ color: "transparent"
                                     id:plusgradetimer
                                          interval: 500; running: false; repeat: true
                                          onTriggered: {
-                                             if(graderectangle.grade<5.0)
+                                             if(graderectangle.grade<6.0)
                                                  graderectangle.grade+=0.5
                                              if(interval>100)
                                                 interval*=0.8

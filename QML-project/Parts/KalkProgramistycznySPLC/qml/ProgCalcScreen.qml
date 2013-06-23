@@ -56,13 +56,12 @@ Screen {
                     id: column; spacing: 6
 
                     property real h: ((box.height - 72) / 6) - ((spacing * (6 - 1)) / 6)
-                    property real w: (box.width / 8) - ((spacing * (8 - 1)) / 8)
+                    property real w: (box.width / 7) - ((spacing * (7 - 1)) / 7)
                     property real wsys: (box.width / 4) - ((spacing * (4 - 1)) / 4)
                     property real hfun: ((box.height - (3*h)-display.height) / 2) - ((spacing * (4 - 1)) / 6)
 
                     Row {
                         spacing: 6
-                        Button { width: column.w; height: column.h; color: 'purple'; operation: "?" }
                         Button { width: column.w; height: column.h; color: 'purple'; operation: and}
                         Button { width: column.w; height: column.h; color: 'purple'; operation: or }
                         Button { width: column.w; height: column.h; color: 'purple'; operation: xor }

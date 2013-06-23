@@ -76,22 +76,8 @@ Screen {
                 width: parent.width
                 height: parent.height/5
                 Rectangle{
-                    id:a1
-                    anchors.left:parent.left
-                    width: parent.width/4
-                    height: parent.height
-                    Button{
-                        anchors.centerIn: parent
-                        width: parent.width-parent.width/10
-                        height: parent.height-parent.height/10
-                        operation: "?"
-                        gradient: functions
-                    }
-                }
-                Rectangle{
                     id:a2
-                    anchors.left:a1.right
-                    width: parent.width/4
+                    width: parent.width/3
                     height: parent.height
                     Button{
                         anchors.centerIn: parent
@@ -104,7 +90,7 @@ Screen {
                 Rectangle{
                     id:a3
                     anchors.left:a2.right
-                    width: parent.width/4
+                    width: parent.width/3
                     height: parent.height
                     Button{
                         anchors.centerIn: parent
@@ -117,7 +103,7 @@ Screen {
                 Rectangle{
                     id:a4
                     anchors.left:a3.right
-                    width: parent.width/4
+                    width: parent.width/3
                     height: parent.height
                     Button{
                         anchors.centerIn: parent

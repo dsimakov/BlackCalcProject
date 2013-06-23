@@ -35,15 +35,15 @@ Item {
         GradientStop { position: 1.0; color: "#2463DE" }
     }
 
-    // Transparent "shadow"
-    Rectangle {
-        anchors.centerIn: parent
-        color: "#44000000"
-        width: parent.width
-        height: textboxText.height
-        x: 15; y: 15
-        radius: 5
+    Rectangle{
+        color: "grey";
+        width: screen.width+screen.width/5
+        height: screen.height
+        opacity: 0.9
+        anchors.left: screen.left
+        x: -screen.width/5
     }
+
 
     // Text box
     Rectangle {
@@ -351,6 +351,7 @@ Item {
                                 anchors.fill: parent
                                 onClicked:{
                                     item.visible=false
+                                    flickArea.interactive=true
                                 }
                                 onPressed: {
                                     parent.gradient = selected
@@ -392,6 +393,7 @@ Item {
                                     grade=msg+lsg
                                     item.buttonClicked(changedItem,grade)
                                     item.visible=false
+                                    flickArea.interactive=true
                                 }
                                 onPressed: {
                                     parent.gradient = selected
