@@ -7,6 +7,7 @@ var curVal = 0
      if (op == "." && display.text.toString().search(/\./) != -1) {
          return true
      } else if (op == squareRoot &&  display.text.toString().search(/-/) != -1) {
+         display.text="Error"
          return true
      } else {
          return false

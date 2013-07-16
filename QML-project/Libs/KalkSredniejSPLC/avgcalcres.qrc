@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/CalcScreen.qml</file>
+        <file>qml/fill_list.js</file>
+        <file>qml/Display.qml</file>
+        <file>qml/TopBar.qml</file>
+        <file>qml/BackButton.qml</file>
+        <file>qml/ScrollBar.qml</file>
+        <file>qml/Screen.qml</file>
+    </qresource>
+    <qresource prefix="/qml/images">
+        <file alias="scrollbar.png">qml/images/scrollbar.png</file>
+        <file alias="arrow.png">qml/images/arrow.png</file>
+    </qresource>
+</RCC>

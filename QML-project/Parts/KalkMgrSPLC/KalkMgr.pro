@@ -25,70 +25,65 @@ symbian:TARGET.UID3 = 0xE77F3DFD
 # MOBILITY +=
 
 # The .cpp file which was generated for your project. Feel free to hack it.
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    lib.c
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
 
 OTHER_FILES += \
-    qml/TopBar.qml \
-    qml/ScrollBar.qml \
-    qml/Screen.qml \
-    qml/main.qml \
     qml/BackButton.qml \
-    android/src/org/kde/necessitas/origo/QtActivity.java \
-    android/src/org/kde/necessitas/origo/QtApplication.java \
-    android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \
-    android/src/org/kde/necessitas/ministro/IMinistro.aidl \
-    android/res/values-nb/strings.xml \
-    android/res/values-fr/strings.xml \
-    android/res/values-de/strings.xml \
-    android/res/values-zh-rCN/strings.xml \
-    android/res/drawable-hdpi/icon.png \
-    android/res/values-nl/strings.xml \
-    android/res/values-ms/strings.xml \
-    android/res/values-es/strings.xml \
-    android/res/values-id/strings.xml \
-    android/res/values-ru/strings.xml \
-    android/res/drawable/icon.png \
-    android/res/drawable/logo.png \
-    android/res/drawable-mdpi/icon.png \
-    android/res/values-rs/strings.xml \
-    android/res/values-ro/strings.xml \
-    android/res/values-et/strings.xml \
-    android/res/values-zh-rTW/strings.xml \
-    android/res/drawable-ldpi/icon.png \
-    android/res/values-el/strings.xml \
-    android/res/values-pl/strings.xml \
-    android/res/layout/splash.xml \
-    android/res/values-ja/strings.xml \
-    android/res/values-fa/strings.xml \
-    android/res/values-pt-rBR/strings.xml \
-    android/res/values/strings.xml \
-    android/res/values/libs.xml \
-    android/res/values-it/strings.xml \
-    android/AndroidManifest.xml \
-    android/version.xml \
-    Error.qml \
-    qml/Extraoptions.qml \
-    qml/ExtraOptionsModel.qml \
-    qml/PredictionScreen.qml \
-    qml/OptionsScreen.qml \
-    qml/Screen.qml \
-    qml/ScrollBar.qml \
-    qml/BackButton.qml \
-    qml/TopBar.qml \
-    qml/Extraoptions.qml \
-    qml/ExtraOptionsModel.qml \
-    qml/main.qml \
-    qml/PredictionScreen.qml \
-    qml/OptionsScreen.qml \
-    qml/OptionsList/OptionsScreenItem.qml \
     qml/ChangeGradePanel.qml \
-    bar-descriptor.xml
+    qml/TopBar.qml \
+    qml/Extraoptions.qml \
+    qml/ExtraOptionsModel.qml \
+    qml/main.qml \
+    qml/OptionsScreen.qml \
+    qml/PredictionScreen.qml \
+    qml/Screen.qml \
+    qml/ScrollBar.qml \
+    qml/TopBar.qml \
+    qml/OptionsList/OptionsScreenItem.qml \
+    qml/images/icon.png \
+    bar-descriptor.xml \
+    QML-List-Example.png \
+    QML-List-Example.svg \
+    icon.png \
+    KalkMgr.pro.user
 
 HEADERS +=
 
 RESOURCES += \
     mgrcalcres.qrc
+
+qnx {
+    QMAKE_LFLAGS += '-Wl,-rpath,\'./app/native/lib\''
+
+    PACKAGE_ARGS = \
+        $${PWD}/bar-descriptor.xml $$TARGET \
+        -e $${PWD}/icon.png icon.png \
+        -e $$[QT_INSTALL_LIBS]/libQtCore.so.5 lib/libQtCore.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtGui.so.5 lib/libQtGui.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtOpenGL.so.5 lib/libQtOpenGL.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtNetwork.so.5 lib/libQtNetwork.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtWidgets.so.5 lib/libQtWidgets.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtQuick.so.5 lib/libQtQuick.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtQml.so.5 lib/libQtQml.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtSql.so.5 lib/libQtSql.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtV8.so.5 lib/libQtV8.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtXmlPatterns.so.5 lib/libQtXmlPatterns.so.5 \
+        -e $$[QT_INSTALL_PLUGINS]/platforms/libqnx.so plugin/platforms/libqnx.so \
+        -e $$[QT_INSTALL_IMPORTS]/ qml/
+
+    package.target = $${TARGET}.bar
+    package.depends = $$TARGET
+    package.commands = blackberry-nativepackager \
+        -package $${TARGET}.bar \
+        -devMode -debugToken $$(DEBUG_TOKEN) \
+        $${PACKAGE_ARGS}
+
+    QMAKE_EXTRA_TARGETS += package
+
+    OTHER_FILES += bar-descriptor.xml
+}

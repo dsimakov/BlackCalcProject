@@ -17,10 +17,10 @@ var currentSystem= "DEC"
  }
 
 function disableButtons(){
-    bin.color='green';
-    oct.color=bin.color;
-    dec.color=bin.color;
-    hex.color=bin.color;
+    bin.gradient=systemsInactive;
+    oct.gradient=systemsInactive;
+    dec.gradient=systemsInactive;
+    hex.gradient=systemsInactive;
 }
 
 function setSystem(op)
@@ -40,21 +40,21 @@ function setSystem(op)
         {
         display.text = (parseInt(display.text,16)).toString(2)
         }
-        bin.color='orange';
-        two.color="gray"
-        three.color="gray"
-        four.color="gray"
-        five.color="gray"
-        six.color="gray"
-        seven.color="gray"
-        eight.color="gray"
-        nine.color="gray"
-        a.color="gray"
-        b.color="gray"
-        c.color="gray"
-        d.color="gray"
-        e.color="gray"
-        f.color="gray"
+        bin.gradient=systems
+        two.gradient=normalInactive
+        three.gradient=normalInactive
+        four.gradient=normalInactive
+        five.gradient=normalInactive
+        six.gradient=normalInactive
+        seven.gradient=normalInactive
+        eight.gradient=normalInactive
+        nine.gradient=normalInactive
+        a.gradient=normalInactive
+        b.gradient=normalInactive
+        c.gradient=normalInactive
+        d.gradient=normalInactive
+        e.gradient=normalInactive
+        f.gradient=normalInactive
     }
     if(op=='OCT'){
         if(currentSystem=='BIN')
@@ -69,21 +69,21 @@ function setSystem(op)
         {
         display.text = (parseInt(display.text,16)).toString(8)
         }
-        oct.color='orange';
-        two.color="blue"
-        three.color="blue"
-        four.color="blue"
-        five.color="blue"
-        six.color="blue"
-        seven.color="blue"
-        eight.color="gray"
-        nine.color="gray"
-        a.color="gray"
-        b.color="gray"
-        c.color="gray"
-        d.color="gray"
-        e.color="gray"
-        f.color="gray"
+        oct.gradient=systems
+        two.gradient=normal
+        three.gradient=normal
+        four.gradient=normal
+        five.gradient=normal
+        six.gradient=normal
+        seven.gradient=normal
+        eight.gradient=normalInactive
+        nine.gradient=normalInactive
+        a.gradient=normalInactive
+        b.gradient=normalInactive
+        c.gradient=normalInactive
+        d.gradient=normalInactive
+        e.gradient=normalInactive
+        f.gradient=normalInactive
     }
     if(op=='DEC'){
         if(currentSystem=='OCT')
@@ -98,21 +98,21 @@ function setSystem(op)
         {
         display.text = (parseInt(display.text,16)).toString(10)
         }
-        dec.color='orange';
-        two.color="blue"
-        three.color="blue"
-        four.color="blue"
-        five.color="blue"
-        six.color="blue"
-        seven.color="blue"
-        eight.color="blue"
-        nine.color="blue"
-        a.color="gray"
-        b.color="gray"
-        c.color="gray"
-        d.color="gray"
-        e.color="gray"
-        f.color="gray"
+        dec.gradient=systems
+        two.gradient=normal
+        three.gradient=normal
+        four.gradient=normal
+        five.gradient=normal
+        six.gradient=normal
+        seven.gradient=normal
+        eight.gradient=normal
+        nine.gradient=normal
+        a.gradient=normalInactive
+        b.gradient=normalInactive
+        c.gradient=normalInactive
+        d.gradient=normalInactive
+        e.gradient=normalInactive
+        f.gradient=normalInactive
     }
     if(op=='HEX'){
         if(currentSystem=='OCT')
@@ -127,21 +127,21 @@ function setSystem(op)
         {
         display.text = (parseInt(display.text,2)).toString(16)
         }
-        hex.color='orange';
-        two.color="blue"
-        three.color="blue"
-        four.color="blue"
-        five.color="blue"
-        six.color="blue"
-        seven.color="blue"
-        eight.color="blue"
-        nine.color="blue"
-        a.color="blue"
-        b.color="blue"
-        c.color="blue"
-        d.color="blue"
-        e.color="blue"
-        f.color="blue"
+        hex.gradient=systems
+        two.gradient=normal
+        three.gradient=normal
+        four.gradient=normal
+        five.gradient=normal
+        six.gradient=normal
+        seven.gradient=normal
+        eight.gradient=normal
+        nine.gradient=normal
+        a.gradient=normal
+        b.gradient=normal
+        c.gradient=normal
+        d.gradient=normal
+        e.gradient=normal
+        f.gradient=normal
     }
     currentSystem=op;
 }
@@ -229,7 +229,7 @@ function operationOnValue(op)
     }
     if(op=="-")
     {
-        value=value-curVal
+        value=curVal-value
     }
     if(op==multiplication)
     {
@@ -267,7 +267,7 @@ function operationOnValue(op)
      if (op.toString().length==1 && ((op >= "0" && op <= "9") || (op >= "A" && op <= "F")) ) {
          if (display.text.toString().length >= 14)
              return; // No arbitrary length numbers
-         if (lastOp.toString().length == 1 && ((lastOp >= "0" && lastOp <= "9") ) ) {
+         if (lastOp.toString().length == 1 && ((lastOp >= "0" && lastOp <= "9") || (lastOp >= "A" && lastOp <= "F")) ) {
              display.text = display.text + op.toString()
          } else {
              display.text = op

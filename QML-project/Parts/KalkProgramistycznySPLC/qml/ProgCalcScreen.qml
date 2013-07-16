@@ -24,6 +24,12 @@ Screen {
         GradientStop { position: 0.7; color: "#4A6C9B" }
         GradientStop { position: 1.0; color: "#4A6C9B" }
     }
+    Gradient {
+        id: normalInactive
+        GradientStop { position: 0.5; color: "#b3b3b3" }
+        GradientStop { position: 0.7; color: "#b3b3b3" }
+        GradientStop { position: 1.0; color: "#999999" }
+    }
 
     Gradient{
         id: functions
@@ -34,6 +40,19 @@ Screen {
 
     Gradient{
         id: operations
+        GradientStop { position: 0.5; color: "#a8cda4" }
+        GradientStop { position: 0.7; color: "#549b4a" }
+        GradientStop { position: 1.0; color: "#549b4a" }
+    }
+
+    Gradient{
+        id: systems
+        GradientStop { position: 0.5; color: "#4a9142" }
+        GradientStop { position: 0.7; color: "#2c5427" }
+        GradientStop { position: 1.0; color: "#2c5427" }
+    }
+    Gradient{
+        id: systemsInactive
         GradientStop { position: 0.5; color: "#a8cda4" }
         GradientStop { position: 0.7; color: "#549b4a" }
         GradientStop { position: 1.0; color: "#549b4a" }
@@ -62,23 +81,23 @@ Screen {
 
                     Row {
                         spacing: 6
-                        Button { width: column.w; height: column.h; color: 'purple'; operation: and}
-                        Button { width: column.w; height: column.h; color: 'purple'; operation: or }
-                        Button { width: column.w; height: column.h; color: 'purple'; operation: xor }
-                        Button { width: column.w; height: column.h; color: 'purple'; operation: not }
-                        Button { width: column.w; height: column.h; color: 'purple'; operation: "SHL" }
-                        Button { width: column.w; height: column.h; color: 'purple'; operation: "SHR" }
-                        Button { width: column.w; height: column.h; color: 'purple'; operation: "CLEAR" }
+                        Button { width: column.w; height: column.h; gradient: functions; operation: and}
+                        Button { width: column.w; height: column.h; gradient: functions; operation: or }
+                        Button { width: column.w; height: column.h; gradient: functions; operation: xor }
+                        Button { width: column.w; height: column.h; gradient: functions; operation: not }
+                        Button { width: column.w; height: column.h; gradient: functions; operation: "SHL" }
+                        Button { width: column.w; height: column.h; gradient: functions; operation: "SHR" }
+                        Button { width: column.w; height: column.h; gradient: functions; operation: "CLEAR" }
                     }
 
                     Row {
                         spacing: 6
                         property real w: (box.width / 4) - ((spacing * (4 - 1)) / 4)
 
-                        Button {id: bin; width: column.wsys; height: column.h; color: 'green'; operation: "BIN" }
-                        Button {id: oct; width: column.wsys; height: column.h; color: 'green'; operation: "OCT" }
-                        Button {id: dec; width: column.wsys; height: column.h; color: 'orange'; operation: "DEC" }
-                        Button {id: hex; width: column.wsys; height: column.h; color: 'green'; operation: "HEX" }
+                        Button {id: bin; width: column.wsys; height: column.h; gradient: systemsInactive; operation: "BIN" }
+                        Button {id: oct; width: column.wsys; height: column.h; gradient: systemsInactive; operation: "OCT" }
+                        Button {id: dec; width: column.wsys; height: column.h; gradient: systems; operation: "DEC" }
+                        Button {id: hex; width: column.wsys; height: column.h; gradient: systemsInactive; operation: "HEX" }
                     }
 
                     Column {
@@ -90,22 +109,22 @@ Screen {
 
                         property real w: (column2.width / columns) - ((spacing * (columns - 1)) / columns)
 
-                        Button {id:zero; width: grid.w; height: column.hfun; operation: "0"; color: 'blue' }
-                        Button {id:one; width: grid.w; height: column.hfun; operation: "1"; color: 'blue' }
-                        Button {id:two; width: grid.w; height: column.hfun; operation: "2"; color: 'blue' }
-                        Button {id:three; width: grid.w; height: column.hfun; operation: "3"; color: 'blue' }
-                        Button {id:four; width: grid.w; height: column.hfun; operation: "4"; color: 'blue' }
-                        Button {id:five; width: grid.w; height: column.hfun; operation: "5"; color: 'blue' }
-                        Button {id:six; width: grid.w; height: column.hfun; operation: "6"; color: 'blue' }
-                        Button {id:seven; width: grid.w; height: column.hfun; operation: "7"; color: 'blue' }
-                        Button {id:eight; width: grid.w; height: column.hfun; operation: "8"; color: 'blue' }
-                        Button {id:nine; width: grid.w; height: column.hfun; operation: "9"; color: 'blue' }
-                        Button {id:a; width: grid.w; height: column.hfun; operation: "A"; color: 'gray' }
-                        Button {id:b; width: grid.w; height: column.hfun; operation: "B"; color: 'gray' }
-                        Button {id:c; width: grid.w; height: column.hfun; operation: "C"; color: 'gray' }
-                        Button {id:d; width: grid.w; height: column.hfun; operation: "D"; color: 'gray' }
-                        Button {id:e; width: grid.w; height: column.hfun; operation: "E"; color: 'gray' }
-                        Button {id:f; width: grid.w; height: column.hfun; operation: "F"; color: 'gray' }
+                        Button {id:zero; width: grid.w; height: column.hfun; operation: "0"; gradient: normal }
+                        Button {id:one; width: grid.w; height: column.hfun; operation: "1"; gradient: normal }
+                        Button {id:two; width: grid.w; height: column.hfun; operation: "2"; gradient: normal }
+                        Button {id:three; width: grid.w; height: column.hfun; operation: "3"; gradient: normal }
+                        Button {id:four; width: grid.w; height: column.hfun; operation: "4"; gradient: normal }
+                        Button {id:five; width: grid.w; height: column.hfun; operation: "5"; gradient: normal }
+                        Button {id:six; width: grid.w; height: column.hfun; operation: "6"; gradient: normal }
+                        Button {id:seven; width: grid.w; height: column.hfun; operation: "7"; gradient: normal }
+                        Button {id:eight; width: grid.w; height: column.hfun; operation: "8"; gradient: normal }
+                        Button {id:nine; width: grid.w; height: column.hfun; operation: "9"; gradient: normal }
+                        Button {id:a; width: grid.w; height: column.hfun; operation: "A"; gradient: normalInactive }
+                        Button {id:b; width: grid.w; height: column.hfun; operation: "B"; gradient: normalInactive }
+                        Button {id:c; width: grid.w; height: column.hfun; operation: "C"; gradient: normalInactive }
+                        Button {id:d; width: grid.w; height: column.hfun; operation: "D"; gradient: normalInactive}
+                        Button {id:e; width: grid.w; height: column.hfun; operation: "E"; gradient: normalInactive }
+                        Button {id:f; width: grid.w; height: column.hfun; operation: "F"; gradient: normalInactive}
                     }
                     }
 
@@ -119,10 +138,10 @@ Screen {
 
                             property real w: (column3.width / columns) - ((spacing * (columns - 1)) / columns)
 
-                            Button { width: grid2.w; height: column.hfun; operation: "+"; color: 'blue' }
-                            Button { width: grid2.w; height: column.hfun; operation: "-"; color: 'blue' }
-                            Button { width: grid2.w; height: column.hfun; operation: multiplication; color: 'blue' }
-                            Button { width: grid2.w; height: column.hfun; operation: "="; color: 'red' }
+                            Button { width: grid2.w; height: column.hfun; operation: "+"; gradient: functions }
+                            Button { width: grid2.w; height: column.hfun; operation: "-"; gradient: functions }
+                            Button { width: grid2.w; height: column.hfun; operation: multiplication; gradient: functions }
+                            Button { width: grid2.w; height: column.hfun; operation: "="; gradient: functions }
 
                         }
                 }

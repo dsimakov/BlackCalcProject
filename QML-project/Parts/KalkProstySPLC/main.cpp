@@ -6,6 +6,7 @@
 
 int main(int argc, char *argv[])
 {
+    system("export QQNX_PHYSICAL_SCREEN_SIZE=150,100");
     QApplication app(argc, argv);
     app.setApplicationName("BBSimpleCalc ");
        app.setApplicationVersion("1.0rc LGPL 3.0 lic.");

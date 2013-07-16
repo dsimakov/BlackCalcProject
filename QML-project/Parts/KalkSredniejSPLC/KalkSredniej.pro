@@ -77,9 +77,43 @@ OTHER_FILES += \
     qml/main.qml \
     qml/Display.qml \
     qml/CalcScreen.qml \
+    qml/images/icon.png \
     bar-descriptor.xml
 
 HEADERS +=
 
 RESOURCES += \
     avgcalcres.qrc
+
+qnx {
+    QMAKE_LFLAGS += '-Wl,-rpath,\'./app/native/lib\''
+
+    PACKAGE_ARGS = \
+        $${PWD}/bar-descriptor.xml $$TARGET \
+        -e $${PWD}/icon.png icon.png \
+        -e $${PWD}/prosty.png prosty.png \
+        -e $$[QT_INSTALL_LIBS]/libQtCore.so.5 lib/libQtCore.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtGui.so.5 lib/libQtGui.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtOpenGL.so.5 lib/libQtOpenGL.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtNetwork.so.5 lib/libQtNetwork.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtWidgets.so.5 lib/libQtWidgets.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtQuick.so.5 lib/libQtQuick.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtQml.so.5 lib/libQtQml.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtSql.so.5 lib/libQtSql.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtV8.so.5 lib/libQtV8.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQtXmlPatterns.so.5 lib/libQtXmlPatterns.so.5 \
+        -e $$[QT_INSTALL_PLUGINS]/platforms/libqnx.so plugins/platforms/libqnx.so \
+        -e $$[QT_INSTALL_IMPORTS]/ qml/
+
+    package.target = $${TARGET}.bar
+    package.depends = $$TARGET
+    package.commands = blackberry-nativepackager \
+        -package $${TARGET}.bar \
+        -devMode -debugToken $$(DEBUG_TOKEN) \
+        $${PACKAGE_ARGS}
+
+    QMAKE_EXTRA_TARGETS += package
+
+    ICON = prosty.png
+    OTHER_FILES += bar-descriptor.xml
+}
