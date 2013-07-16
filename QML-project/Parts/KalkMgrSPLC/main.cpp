@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     app.setApplicationName("BBMgrCalc ");
        app.setApplicationVersion("1.0rc LGPL 3.0 lic.");
        app.setOrganizationName("Silesian University of Technology Students");
+       QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationLockLandscape);
     viewer.setResizeMode(QmlApplicationViewer::SizeRootObjectToView);

@@ -50,7 +50,8 @@ OTHER_FILES += \
     QML-List-Example.png \
     QML-List-Example.svg \
     icon.png \
-    KalkMgr.pro.user
+    KalkMgr.pro.user \
+    functions.js
 
 HEADERS +=
 

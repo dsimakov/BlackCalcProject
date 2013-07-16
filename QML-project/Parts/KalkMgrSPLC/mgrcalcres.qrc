@@ -12,5 +12,6 @@
         <file>qml/Screen.qml</file>
         <file>qml/images/scrollbar.png</file>
         <file>qml/images/arrow.png</file>
+        <file>functions.js</file>
     </qresource>
 </RCC>

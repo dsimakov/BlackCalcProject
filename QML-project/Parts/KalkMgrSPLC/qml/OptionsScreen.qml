@@ -364,10 +364,8 @@ Screen {
         changeGradePanel.changedItem=component.number
            changeGradePanel.visible=true
         changeGradePanel.grade=Math.round(componentToSet.grade*100)/100
-        changeGradePanel.mostSignificantGrade = changeGradePanel.grade.toString()[0]
-        var lsg = parseInt(changeGradePanel.mostSignificantGrade)
-        var LSG = Math.round((changeGradePanel.grade-lsg)*100)
-        changeGradePanel.leastSignificantGrade = LSG.toString()
+        changeGradePanel.mostSignificantGrade = changeGradePanel.grade.toString()
+
         flickArea.interactive=false
     }
 }

@@ -1,14 +1,14 @@
 import QtQuick 1.0
+import "../functions.js" as Functions
 
 
 /*
  * Text Box oomponent to display text content inside a rectangle with underlay shadow.
-  *
-   */
+   *
+      */
 Item {
     id: item
-    property alias mostSignificantGrade: gradeMSV.text
-    property alias leastSignificantGrade: gradeLSV.text
+    property alias mostSignificantGrade: gradeText.text
     property int changedItem
 
     property alias text: textboxText.text
@@ -53,6 +53,12 @@ Item {
         }
     }
 
+    onVisibleChanged:  {
+        gradeText.forceActiveFocus()
+        gradeText.positionAt(0)
+        gradeText.openSoftwareInputPanel()
+    }
+
     Rectangle {
         color: "grey"
         width: screen.width + screen.width / 5
@@ -64,12 +70,11 @@ Item {
 
     // Text box
     Rectangle {
-        anchors.centerIn: parent
         id: textboxrectangle
         width: parent.width
-        height: parent.width / 2
+        height: parent.height / 3
         x: 10
-        y: 10
+        y: 100
         radius: 5
 
         Text {
@@ -91,273 +96,61 @@ Item {
             Rectangle {
                 color: parent.color
                 width: parent.width
-                height: 0.8 * parent.height
+                height: 0.6 * parent.height
                 anchors.top: parent.top
                 id: changes
-
-                Rectangle {
-                    color: parent.color
-                    id: leftPart
-                    width: 0.5 * parent.width
-                    height: parent.height
-                    anchors.left: parent.left
 
                     Rectangle {
                         color: parent.color
                         id: upPartLeft
                         width: parent.width
-                        height: 0.5 * parent.height
+                        height: parent.height
                         anchors.top: parent.top
+
+
 
                         Rectangle {
                             width: 0.5 * parent.width
                             height: 0.5 * parent.height
                             color: "white"
                             anchors.centerIn: parent
+                            MouseArea{
+                                anchors.fill: parent
+                                onClicked: {
+                                    gradeText.forceActiveFocus()
+                                    gradeText.positionAt(0)
+                                    gradeText.openSoftwareInputPanel()
+                                }
+                            }
                             TextInput {
-                                id: gradeMSV
+                                id: gradeText
                                 anchors.centerIn: parent
-                                /*width: parent.width*/
                                 height: parent.height * 0.5
                                 focus: true
                                 font.pixelSize: parent.height * 0.4
-                                maximumLength: 1
-                                validator: IntValidator {
-                                    bottom: 2
-                                    top: 5
+                                maximumLength: 4
+                                validator: DoubleValidator {
+                                    decimals: 2
+                                    bottom: 2.0
+                                    top: 5.0
+                                }
+                                onTextChanged: {
+                                    gradeText.text=gradeText.text.replace(",", ".")
+                                    if (parseFloat(gradeText.text) > 5.0)
+                                        gradeText.text = "5.0"
+                                    if (parseFloat(gradeText.text) < 2.0)
+                                        gradeText.text = "2.0"
                                 }
                             }
-                        }
                     }
-                    Rectangle {
-                        color: parent.color
-                        id: downPartLeft
-                        width: parent.width
-                        height: 0.5 * parent.height
-                        anchors.bottom: parent.bottom
 
-                        Rectangle {
-                            color: parent.color
-                            id: downPartLeftLeftPart
-                            width: 0.5 * parent.width
-                            height: parent.height
-                            anchors.left: parent.left
-                            Rectangle {
-                                gradient: normal
-                                radius: 10
-                                anchors.centerIn: parent
-                                width: 0.8 * parent.width
-                                height: 0.8 * parent.height
-                                Text {
-                                    id: msgMinusButtonText
-                                    text: "-"
-                                    anchors.centerIn: parent
-                                    font.pixelSize: main.height / 10
-                                    textFormat: Text.RichText
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        if (gradeMSV.text.length == 0) {
-                                            gradeMSV.text = "3"
-                                        } else {
-                                            var msgGrade = parseInt(
-                                                        gradeMSV.text)
-                                            msgGrade -= 1
-                                            if (msgGrade < 3)
-                                                msgGrade = 3
-                                            gradeMSV.text = msgGrade.toString()
-                                        }
-                                    }
-                                    onPressed: {
-                                        parent.gradient = selected
-                                    }
-                                    onReleased: {
-                                        parent.gradient = normal
-                                    }
-                                }
-                            }
-                        }
-                        Rectangle {
-                            color: parent.color
-                            id: downPartLeftRightPart
-                            width: 0.5 * parent.width
-                            height: parent.height
-                            anchors.right: parent.right
-                            Rectangle {
-                                radius: 10
-                                anchors.centerIn: parent
-                                width: 0.8 * parent.width
-                                height: 0.8 * parent.height
-                                gradient: normal
-                                Text {
-                                    id: msgPlusButtonText
-                                    text: "+"
-                                    anchors.centerIn: parent
-                                    font.pixelSize: main.height / 10
-                                    textFormat: Text.RichText
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        if (gradeMSV.text.length == 0) {
-                                            gradeMSV.text = "3"
-                                        } else {
-
-                                            var msgGrade = parseInt(
-                                                        gradeMSV.text)
-                                            msgGrade += 1
-                                            if (msgGrade >= 5) {
-                                                msgGrade = 5
-                                                gradeLSV.text = "0"
-                                            } else if (msgGrade < 3) {
-                                                msgGrade = 3
-                                            }
-                                            gradeMSV.text = msgGrade.toString()
-                                        }
-                                    }
-                                    onPressed: {
-                                        parent.gradient = selected
-                                    }
-                                    onReleased: {
-                                        parent.gradient = normal
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                Rectangle {
-                    color: parent.color
-                    id: rightPart
-                    width: 0.5 * parent.width
-                    height: parent.height
-                    anchors.right: parent.right
-
-                    Rectangle {
-                        color: parent.color
-                        id: upPartRight
-                        width: parent.width
-                        height: 0.5 * parent.height
-                        anchors.top: parent.top
-                        Rectangle {
-                            width: 0.5 * parent.width
-                            height: 0.5 * parent.height
-                            color: "white"
-                            anchors.centerIn: parent
-                            TextInput {
-                                id: gradeLSV
-                                anchors.centerIn: parent
-                                /*width: parent.width*/
-                                height: parent.height * 0.5
-                                focus: true
-                                font.pixelSize: parent.height * 0.4
-                                maximumLength: 2
-                                validator: IntValidator {
-                                    bottom: 0
-                                    top: 99
-                                }
-                            }
-                        }
-                    }
-                    Rectangle {
-                        color: parent.color
-                        id: downPartRight
-                        width: parent.width
-                        height: 0.5 * parent.height
-                        anchors.bottom: parent.bottom
-                        Rectangle {
-                            color: parent.color
-                            id: downPartRightLeftPart
-                            width: 0.5 * parent.width
-                            height: parent.height
-                            anchors.left: parent.left
-                            Rectangle {
-                                radius: 10
-                                anchors.centerIn: parent
-                                width: 0.8 * parent.width
-                                height: 0.8 * parent.height
-                                gradient: normal
-                                Text {
-                                    id: lsgMinusButtonText
-                                    text: "-"
-                                    anchors.centerIn: parent
-                                    font.pixelSize: main.height / 10
-                                    textFormat: Text.RichText
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        if (gradeLSV.text.length == 0) {
-                                            gradeLSV.text = "0"
-                                        } else {
-                                        var msgGrade = parseInt(gradeLSV.text)
-                                        msgGrade -= 1
-                                        if (msgGrade < 0)
-                                            msgGrade = 0
-                                        gradeLSV.text = msgGrade.toString()
-                                    }
-                                    }
-                                    onPressed: {
-                                        parent.gradient = selected
-                                    }
-                                    onReleased: {
-                                        parent.gradient = normal
-                                    }
-                                }
-                            }
-                        }
-                        Rectangle {
-                            color: parent.color
-                            id: downPartRightRightPart
-                            width: 0.5 * parent.width
-                            height: parent.height
-                            anchors.right: parent.right
-                            Rectangle {
-                                radius: 10
-                                anchors.centerIn: parent
-                                width: 0.8 * parent.width
-                                height: 0.8 * parent.height
-                                gradient: normal
-                                Text {
-                                    id: lsgPlusButtonText
-                                    text: "+"
-                                    anchors.centerIn: parent
-                                    font.pixelSize: main.height / 10
-                                    textFormat: Text.RichText
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        if (gradeLSV.text.length == 0) {
-                                            gradeLSV.text = "0"
-                                        } else {
-                                        var msgGrade = parseInt(gradeLSV.text)
-                                        if (gradeMSV.text != "5") {
-                                            msgGrade += 1
-                                            if (msgGrade >= 100)
-                                                msgGrade = 99
-                                            gradeLSV.text = msgGrade.toString()
-                                        }
-                                        }
-                                    }
-                                    onPressed: {
-                                        parent.gradient = selected
-                                    }
-                                    onReleased: {
-                                        parent.gradient = normal
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
 
             Rectangle {
                 color: parent.color
                 width: parent.width
-                height: 0.2 * parent.height
+                height: 0.4 * parent.height
                 anchors.bottom: parent.bottom
                 id: buttons
                 Rectangle {
@@ -420,12 +213,12 @@ Item {
 
                             anchors.fill: parent
                             onClicked: {
-                                var lsg = parseInt(gradeLSV.text) / 100
-                                var msg = parseInt(gradeMSV.text)
-                                grade = msg + lsg
+                                grade = parseFloat(gradeText.text.replace(",","."))
+                                console.debug(gradeText.text)
                                 item.buttonClicked(changedItem, grade)
                                 item.visible = false
                                 flickArea.interactive = true
+                                gradeText.closeSoftwareInputPanel()
                             }
                             onPressed: {
                                 parent.gradient = selected
